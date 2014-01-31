@@ -33,6 +33,7 @@ echo $trend_manager->getLastTimestamp();
 $trend_manager->manage(!!debug('do'));
 
 
+
 if (debug('doh'))
     $trend_manager->manageTrendHour();
 if (debug('dod'))

@@ -80,6 +80,15 @@ class TwitterManagerTrend extends TwitterManager{
         echo "【".__METHOD__."】";
         $data = $this->shiftPopDb(db_table_name_1, db_table_name_2);
         $words = $this->collectTopTrend($data);
+        //        print_r($words);
+        $this->tweetTrend($words);
+        $this->mem->timestamp_post = time();
+    }
+
+    public function _manageTrendHour($data) {
+        echo "【".__METHOD__."】";
+        $data = $this->shiftPopDb(db_table_name_1, db_table_name_2);
+        $words = $this->collectTopTrend($data);
         echo "<6>";
         //        print_r($words);
         $this->tweetTrend($words);
@@ -408,6 +417,9 @@ class TwitterManagerTrend extends TwitterManager{
     // ----------------- TrendCollecting ----------------- //
     private function collectTopTrend($data) {
         $data = $this->trendSort($data);
+        echo PHP_EOL . '<4>'.PHP_EOL;
+        print_r($data);
+        echo PHP_EOL . '<4>'.PHP_EOL;
         $tops = array();
         foreach ($data as $key => $value) {
             $tops[$key] = $value;
