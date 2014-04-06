@@ -77,6 +77,7 @@ class TwitterManagerTrend extends TwitterManager
 			$this->loadMention();
 			$this->manageReplay();
 		}
+		print_r($this->mem);
 		$this->saveMemFile();
 	}
 
@@ -89,6 +90,7 @@ class TwitterManagerTrend extends TwitterManager
 		//        print_r($words);
 		// TODO: manage chain
 		$chains = $this->createChainNum($words);
+		var_dump($chains);
 		$this->tweetTrend($words, $chains);
 		$this->mem->timestamp_post = time();
 	}
@@ -454,11 +456,12 @@ class TwitterManagerTrend extends TwitterManager
 		foreach ($words as $key => $value)
 		{
 			$text .= $key;
-			if (empty($chains[$text]))
+			$text .= $this->createRateTextFromPoint($value, ma_only);
+			if (!empty($chains[$key]))
 			{
-				$text .= $this->createChainText($chains[$text]);
+				$text .= $this->createChainText($chains[$key]);
 			}
-			$text .= $this->createRateTextFromPoint($value, ma_only) . "\n";
+			$text .= "\n";
 		}
 		if (ma_debug_tweet)
 			echo $text;
@@ -711,16 +714,16 @@ class TwitterManagerTrend extends TwitterManager
 	{
 		$chains_pre = $this->mem->chain;
 		$chains = array();
-		foreach ($words as $word)
+		foreach ($words as $word => $v)
 		{
 			$chains[$word] = 1;
 			if ($chains_pre !== NULL)
 			{
 				foreach ($chains_pre as $key => $value)
 				{
-					if ($value === $word)
+					if ($key === $word)
 					{
-						$chain[$word] += $value;
+						$chains[$word] += $value;
 					}
 				}
 			}
