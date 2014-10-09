@@ -17,14 +17,14 @@ require_once('./TwitterManagerTrend.php');
 require_once('./function.php');
 
 
-echo "<pre>";
-echo "【start】".PHP_EOL;
+//echo "<pre>";
+//echo "【start】".PHP_EOL;
 
 setupEncodeing();
 setDB();
 
 $connection = new TwitterOAuth(ap_consumer_key, ap_consumer_secret, ap_access_token, ap_access_token_scret);
-print_r($connection);
+//print_r($connection);
 
 $trend_manager = new TwitterManagerTrend($connection, tw_owner_name, tw_list_name, mem_json_filename);
 //$manager->_initializeMemFile();

@@ -24,7 +24,7 @@ class TwitterManagerTrend extends TwitterManager
 		$this->list_name = $list_name;
 		$this->mem = array();
 		$this->loadMemFile($mem_json_filename);
-		print_r($this->mem);
+//		print_r($this->mem);
 		$this->time_stamp_pre = $this->mem->timestamp_tl;
 
 		$this->initializeSpecialWords();
@@ -77,7 +77,7 @@ class TwitterManagerTrend extends TwitterManager
 			$this->loadMention();
 			$this->manageReplay();
 		}
-		print_r($this->mem);
+//		print_r($this->mem);
 		$this->saveMemFile();
 	}
 
@@ -90,7 +90,7 @@ class TwitterManagerTrend extends TwitterManager
 		//        print_r($words);
 		// TODO: manage chain
 		$chains = $this->createChainNum($words);
-		var_dump($chains);
+//		var_dump($chains);
 		$this->tweetTrend($words, $chains);
 		$this->mem->timestamp_post = time();
 	}
@@ -436,8 +436,8 @@ class TwitterManagerTrend extends TwitterManager
 			$text .= $this->rateSleep($this->mem->getPpz()) . "\n";
 			if ($debug)
 			{
-				print_r($this->mem);
-				print_r($text);
+//				print_r($this->mem);
+//				print_r($text);
 			} else
 			{
 				echo $mtext = "@{$tw->user_screen_name}\n" . $text;
@@ -512,7 +512,7 @@ class TwitterManagerTrend extends TwitterManager
 	{
 		$data = $this->trendSort($data);
 		echo PHP_EOL . '<4>' . PHP_EOL;
-		print_r($data);
+//		print_r($data);
 		echo PHP_EOL . '<4>' . PHP_EOL;
 		$tops = array();
 		foreach ($data as $key => $value)
@@ -638,7 +638,7 @@ class TwitterManagerTrend extends TwitterManager
 		if (empty($this->mem))
 			super_die(array('Warning' => 'Attemp to save empty data', 'method' => __METHOD__));
 		$data = json_encode($this->mem);
-		print_r($data);
+//		print_r($data);
 		file_put_contents($this->mem_json_filename, $data) or super_die(array('Error' => 'File put', 'method' => __METHOD__));
 	}
 
@@ -661,6 +661,7 @@ class TwitterManagerTrend extends TwitterManager
 	{
 		$time_h = date('H');
 		$last_h = date('H', $this->mem->timestamp_post);
+        echo '{hourt post check}';
 		echo $time_h . "::" . $last_h . PHP_EOL;
 		return $time_h != $last_h;
 	}
@@ -906,7 +907,7 @@ class TwitterManagerTrend extends TwitterManager
 		$this->mem->mood->mood_wea = 0;
 		$this->mem->mood->mood_zzz = 0;
 		$this->saveMemFile();
-		print_r($this->mem);
+//		print_r($this->mem);
 	}
 
 }
