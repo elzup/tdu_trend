@@ -7,3 +7,6 @@ trend-listfollow.php
 mem.json
 
 old/
+
+vendor/
+composer.lock
