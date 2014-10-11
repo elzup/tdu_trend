@@ -1,12 +1,12 @@
-config.php
-
-test*
-looker.php
-read.php
-trend-listfollow.php
-mem.json
 
 old/
+
+tags
+
+nbproject/
+
+.*
+!.gitignore
 
 vendor/
 composer.lock
