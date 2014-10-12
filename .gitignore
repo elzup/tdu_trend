@@ -4,9 +4,11 @@ old/
 tags
 
 nbproject/
+mem.json
 
 .*
 !.gitignore
 
 vendor/
+config/keys.php
 composer.lock

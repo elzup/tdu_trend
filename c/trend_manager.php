@@ -20,6 +20,12 @@ class TrendManager {
 	 */
 	protected $twitter;
 
+	/**
+	 *
+	 * @var \TrendModel
+	 */
+	protected $trendDAO;
+
 	public function __construct(TwitterOAuth $connection, $owner_name, $list_name, $mem_json_filename) {
 		$this->list_name = $list_name;
 		$this->mem = array();
@@ -30,6 +36,8 @@ class TrendManager {
 		$this->initializeSpecialWords();
 
 		$this->twitter = new TwitterModelTrend($connection, $owner_name, $list_name, $mem_json_filename);
+
+		$this->trendDAO = new TrendModel();
 	}
 
 	protected function initializeSpecialWords() {
@@ -437,37 +445,6 @@ class TrendManager {
 		}
 		arsort($data);
 		return $data;
-	}
-
-	// ----------------- DB Manage Wrap ----------------- //
-
-
-	private function pushPoint($table_name, $text, $count) {
-		echo "$text => $count" . PHP_EOL;
-		$parameter = array(
-			'text' => $text,
-			'count' => $count,
-		);
-		$parameter_dep['count'] = $count;
-
-		DB::insert_add($table_name, $parameter, $parameter_dep);
-	}
-
-	private function registProcedeWord($word) {
-		$result = DB::getData(db_table_name_spe, 'type', array('word' => $word));
-		if (!empty($result)) {
-			return;
-		}
-		$parameter = array(
-			'word' => $word,
-			'type' => 'p',
-		);
-		DB::insert(db_table_name_spe, $parameter);
-	}
-
-	private function loadTopWords() {
-		$result = $this->convertArrayPointFormat(DB::getTable(db_table_name_3, null, null, 50, 'count', true));
-		return $result;
 	}
 
 	// ----------------- Mem file IO ----------------- //
