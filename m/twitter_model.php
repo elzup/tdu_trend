@@ -10,15 +10,6 @@ class TwitterModel {
         $this->owner_name = $owner_name;
     }
 
-    //     protected function apiTest(){
-    //         $url="http://api.twitter.com/1/statuses/home_timeline.json";
-    //         $parameters = array(
-    //         );
-    //         $data = $this->connection->OAuthRequest($url, "GET", $parameters);
-    //         var_dump(data_decode($data));
-    //     }
-
-
 
     /* --------------------------------------------------------- *
      *     gets
@@ -30,7 +21,7 @@ class TwitterModel {
         $url = "search/tweets";
         $parameters = array(
                 'q' => $text,
-                'count' => 100,
+                'count' => $count,
                 'since_id' => $since_id,
         );
         if (!empty($until)) {

@@ -1,7 +1,5 @@
 <?php
 
-require_once('./twitter_model.php');
-
 class TwitterModelTrend extends TwitterModel
 {
     protected $list_name;
@@ -70,5 +68,13 @@ class TwitterModelTrend extends TwitterModel
     {
         return $result = $this->postFollowMemberCreate($this->owner_name, $this->list_name, $target_screen_name);
     }
+
+	private function loadList($sleg) {
+		return $this->getListTimeline($this->owner_name, $this->list_name, $sleg);
+	}
+
+	private function loadMention($from) {
+		return $this->getMentions($from);
+	}
 
 }

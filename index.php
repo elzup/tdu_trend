@@ -3,12 +3,17 @@
 /* composer modules */
 require_once('./vendor/autoload.php');
 
+require_once './config/config.php';
+require_once './config/constants.php';
+require_once './config/.keys';
+
 /* include controllers */
 require_once('./c/page_controller.php');
 require_once('./c/job_controller.php');
 require_once('./c/trend_manager.php');
 /* include classes */
 require_once('./m/trend_model.php');
+require_once('./m/twitter_model.php');
 require_once('./m/twitter_model_trend.php');
 
 $app = new \Slim\Slim(array(
@@ -20,9 +25,11 @@ $app = new \Slim\Slim(array(
 
 $app->get('/', '\PageController:showIndex');
 
-$app->get('/job/log', '\JobController:log_tl');
+$app->get('/job/', '\JobController:walk_tl');
+$app->get('/job/h', '\JobController:tweet_hour');
+$app->get('/job/d', '\JobController:tweet_day');
 
-$app->get("/info", function() use ($app){
+$app->get("/info", function() {
     phpinfo();
 })->name("info");
 

@@ -13,7 +13,6 @@ class TrendManager {
 	// word => point
 	protected $map_trend_point;
 	protected $map_user;
-	protected $segmenter;
 
 	/**
 	 *
@@ -29,7 +28,7 @@ class TrendManager {
 		$this->time_stamp_pre = $this->mem->timestamp_tl;
 
 		$this->initializeSpecialWords();
-		$this->segmenter = new TinySegmenterarray();
+
 		$this->twitter = new TwitterModelTrend($connection, $owner_name, $list_name, $mem_json_filename);
 	}
 
@@ -53,41 +52,29 @@ class TrendManager {
 	}
 
 	// ----------------- Main management method ----------------- //
-	public function manage($debug = false) {
-		if ($this->isTimeManage() || $debug) {
-			$this->loadList();
-			$this->manageListTL();
-		}
-		if ($this->isTimeHourly()) {
-			$this->loadList();
-			$this->manageListTL();
-			$this->manageMoodHour();
-			$this->manageTrendHour();
-			if ($this->isTimeDayly()) {
-				$this->manageTrendDay();
-			}
-		}
-
-		if (!$this->isTimeDelay() || $debug) {
-			$this->loadMention();
-			$this->manageReplay();
-		}
+	public function manage() {
+		$this->list_tweet = $this->twitter->loadList($this->mem->since_list);
+		$this->manageListTL();
 		$this->saveMemFile();
 	}
 
 	public function manageTrendHour() {
+		$this->list_tweet = $this->twitter->loadList($this->mem->since_list);
 		$data = $this->shiftPopDb(db_table_name_1, db_table_name_2);
 		$words = $this->collectTopTrend($data);
 		$chains = $this->createChainNum($words);
 		$this->twitter->tweetTrend($words, $chains);
 		$this->mem->timestamp_post = time();
+		$this->saveMemFile();
 	}
 
 	public function manageTrendDay() {
+		$this->list_tweet = $this->twitter->loadList($this->mem->since_list);
 		$data = $this->shiftPopDb(db_table_name_2, db_table_name_3);
 		$words = $this->collectTopTrend($data);
 		$this->twitter->tweetTrendDay($words);
 		$this->mem->timestamp_postday = time();
+		$this->saveMemFile();
 	}
 
 	public function manageMoodHour() {
@@ -162,6 +149,7 @@ class TrendManager {
 				$this->pushWord($t, $tw->user_id);
 			}
 		}
+		// 顔文字の判定と処理
 		$faces = trimFaceChars($text);
 		if (!empty($faces)) {
 			foreach ($faces as $t) {
@@ -172,12 +160,13 @@ class TrendManager {
 				$text = str_replace($t, '', $text);
 			}
 		}
+		// 登録されている(教育された)単語は優先的にチェック
 		foreach ($this->list_word_procede as $p) {
 			if (strpos($text, $p)) {
 				$this->pushWord($p, $tw->user_id);
 			}
 		}
-		$words = array_unique($this->segmenter->segment($text, 'UTF-8'));
+		$words = array_unique((new TinySegmenterarray())->segment($text, 'UTF-8'));
 		foreach ($words as $w) {
 			$this->pushCheckWord($w, $tw->user_id);
 		}
@@ -210,14 +199,13 @@ class TrendManager {
 		//         $word = preg_replace('/^(w|ｗ){1,5}$/u', "ｗｗｗ", $word);                //草刈機
 		//         $word = preg_replace('/^(w|ｗ){6,10}$/u', "ｗｗｗｗｗｗｗ", $word);
 		//         $word = preg_replace('/^(w|ｗ){11,}$/u', "ｗｗｗｗｗｗｗｗｗｗｗ", $word);
-		if ($word == "") {
-			return false;
-		}
 		$len = strlen($word);
 		$mb_len = mb_strlen($word);
+		// 単語の長さが短い場合
 		if (($len == $mb_len && $len < 3 ) || $mb_len == 1 || preg_match("/^[ぁ-んー]{0,3}$/u", $word) || preg_match('/^[一-龠][ぁ-んー]?$/u', $word)) {
 			return false;
 		}
+		// ngな単語を含んでいる場合
 		if (in_array($word, $this->list_word_ng)) {
 			return false;
 		}
@@ -394,8 +382,9 @@ class TrendManager {
 		$tops = array();
 		foreach ($data as $key => $value) {
 			$tops[$key] = $value;
-			if (count($tops) > 5)
+			if (count($tops) > 5) {
 				break;
+			}
 		}
 		return $tops;
 	}
@@ -433,8 +422,8 @@ class TrendManager {
 					continue;
 				}
 				if (strpos($key_1, $key_2) !== false && $value_1 >= $value_2 / 2) {
-						$value_1 += $value_2 / 2;
-						$value_2 = 0;
+					$value_1 += $value_2 / 2;
+					$value_2 = 0;
 				}
 			}
 		}
@@ -452,16 +441,6 @@ class TrendManager {
 
 	// ----------------- DB Manage Wrap ----------------- //
 
-
-	private function loadList() {
-		$sleg = $this->mem->since_list;
-		$this->list_tweet = $this->getListTimeline($this->owner_name, $this->list_name, $sleg);
-		//        $this->list_tweet = $this->getListTimeline($this->owner_name, $this->list_name, $sleg);
-	}
-
-	private function loadMention() {
-		$this->list_replay = $this->getMentions($this->mem->since_mention);
-	}
 
 	private function pushPoint($table_name, $text, $count) {
 		echo "$text => $count" . PHP_EOL;
@@ -677,8 +656,9 @@ class TrendManager {
 		$data = array();
 		//        $data['point_top'] = $row['word'];
 		$vals = preg_split("/ /", "t l e n m");
-		foreach ($vals as $i => $v)
+		foreach ($vals as $i => $v) {
 			$this->_dropConditionDB($v);
+		}
 	}
 
 	private function _dropConditionDB($type_value) {
