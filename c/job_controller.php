@@ -2,23 +2,29 @@
 
 class JobController {
 
-    public function walk_tl()
-    {
-		$tm = $this->_generate_manager();
+	public static function walk_tl() {
+		$tm = JobController::_generate_manager();
 		$tm->manage();
-    }
-    public function tweet_hour()
-    {
-		$tm = $this->_generate_manager();
+	}
+
+	public static function tweet_hour() {
+		$tm = JobController::_generate_manager();
 		$tm->manageTrendHour();
-    }
-    public function tweet_day()
-    {
-		$tm = $this->_generate_manager();
+	}
+
+	public static function tweet_day() {
+		$tm = JobController::_generate_manager();
 		$tm->manageTrendDay();
-    }
-	private function _generate_manager() {
-		$c = new TwitterOAuth(ap_consumer_key, ap_consumer_secret, ap_access_token, ap_access_token_scret);
+	}
+
+	public static function regist_word($word) {
+		$tm = JobController::_generate_manager();
+		$tm->regist_word($word);
+	}
+
+	private static function _generate_manager() {
+		var_dump(class_exists('TwitterOAuth'));
+		$c = new TwitterOAuth(AP_CONSUMER_KEY, AP_CONSUMER_SECRET, AP_ACCESS_TOKEN, AP_ACCESS_TOKEN_SCRET);
 		return new TrendManager($c, tw_owner_name, tw_list_name, mem_json_filename);
 	}
 

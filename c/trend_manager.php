@@ -1,5 +1,6 @@
 <?php
 
+
 class TrendManager {
 
 	protected $list_name;
@@ -33,15 +34,17 @@ class TrendManager {
 		//		print_r($this->mem);
 		$this->time_stamp_pre = $this->mem->timestamp_tl;
 
+		$this->trendDAO = new TrendModel();
 		$this->initializeSpecialWords();
 
 		$this->twitter = new TwitterModelTrend($connection, $owner_name, $list_name, $mem_json_filename);
 
-		$this->trendDAO = new TrendModel();
 	}
 
 	protected function initializeSpecialWords() {
-		$result = DB::getTable(db_table_name_spe);
+		$result = $this->trendDAO->get_special_words();
+		echo '<pre>';
+		var_dump($result);
 		foreach ($result as $reco) {
 			if (empty($reco['word'])) {
 				continue;
@@ -367,14 +370,9 @@ class TrendManager {
 			$text .= $this->rateSpeed($pph) . "\n";
 			$text .= $this->rateLaugh($this->mem->getPpw()) . "\n";
 			$text .= $this->rateSleep($this->mem->getPpz()) . "\n";
-			if ($debug) {
-				//				print_r($this->mem);
-				//				print_r($text);
-			} else {
-				echo $mtext = "@{$tw->user_screen_name}\n" . $text;
-				if (!ma_debug_tweet) {
-					$this->postTweet($mtext, $tw->id);
-				}
+			echo $mtext = "@{$tw->user_screen_name}\n" . $text;
+			if (!ma_debug_tweet) {
+				$this->postTweet($mtext, $tw->id);
 			}
 			return true;
 		}
@@ -384,9 +382,6 @@ class TrendManager {
 	// ----------------- TrendCollecting ----------------- //
 	private function collectTopTrend($data_tmp) {
 		$data = $this->trendSort($data_tmp);
-		echo PHP_EOL . '<4>' . PHP_EOL;
-		//		print_r($data);
-		echo PHP_EOL . '<4>' . PHP_EOL;
 		$tops = array();
 		foreach ($data as $key => $value) {
 			$tops[$key] = $value;
@@ -446,6 +441,13 @@ class TrendManager {
 		arsort($data);
 		return $data;
 	}
+
+	// ----------------- DB file IO ----------------- //
+	public function regist_word($word) {
+		// TODO: tweet 条件分けして 処理 
+		var_dump($this->trendDAO->regist_procede_word($word));
+	}
+
 
 	// ----------------- Mem file IO ----------------- //
 	private function loadMemFile($filename) {

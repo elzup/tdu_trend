@@ -24,6 +24,7 @@ class Memory {
 		$this->timestamp_tl = $m->timestamp_tl;
 		$this->timestamp_post = $m->timestamp_post;
 		$this->timestamp_postday = $m->timestamp_postday;
+		$this->mood = new stdClass();
 		$this->mood->zzz = $m->mood->zzz;
 		$this->mood->www = $m->mood->www;
 		$this->mood->train = $m->mood->train;
