@@ -14,33 +14,24 @@ class TrendModel extends PDO {
 
 	// ----------------- DB Manage Wrap ----------------- //
 
-	public function pushPoint($table_name, $text, $count) {
-		echo "$text => $count" . PHP_EOL;
-		$parameter = array(
-			'text' => $text,
-			'count' => $count,
-		);
-		$parameter_dep['count'] = $count;
-
-
-		DB::insert_add($table_name, $parameter, $parameter_dep);
+	public function regist_words(array $words) {
+		$sql = 'INSERT INTO ' . DB_TN_CACHES . ' (' . DB_CN_CACHES_WORD . ', ' . DB_CN_CACHES_TWITTER_ID . ', ' . DB_CN_CACHES_TIMESTAMP . ') VALUES ';
+		$sql_values = array();
+		for ($i = 0; $i < count($words); $i++) {
+			$sql_values[] = "(:WORD$i, :TID$i, :TS$i)";
+		}
+		$sql .= implode(',', $sql_values);
+		$stmt = $this->prepare($sql);
+		foreach ($words as $i => $word) {
+			$stmt->bindValue(":WORD$i", $word->word);
+			$stmt->bindValue(":TID$i", $word->twitter_id);
+			$stmt->bindValue(":TS$i", date(MYSQL_TIMESTAMP, $word->timestamp));
+		}
+		return $stmt->execute();
 	}
 
 	public function regist_procede_word($word) {
 		return $this->insert_procede_word($word);
-	}
-
-	public function select_procede_word($word) {
-		$sql = 'SELECT * FROM ' . DB_TN_SPECIALS . ' WHERE ' . DB_CN_SPECIALS_TYPE . '';
-		if (!empty($title_id)) {
-			$sql .= ' WHERE title_id = :ID';
-		}
-		$stmt = $this->dbh->prepare($sql);
-		if (!empty($title_id)) {
-			$stmt->bindValue(':ID', $title_id);
-		}
-		$stmt->execute();
-		return $this->stmt_to_row($stmt);
 	}
 
 	private function insert_procede_word($word) {

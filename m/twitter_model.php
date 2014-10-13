@@ -6,6 +6,7 @@ class TwitterModel {
     protected $owner_name;
 
     protected function __construct(TwitterOAuth $connection, $owner_name){
+		$connection->host = "https://api.twitter.com/1.1/";
         $this->connection = $connection;
         $this->owner_name = $owner_name;
     }

@@ -50,7 +50,7 @@ class TwitterModelTrend extends TwitterModel
         $this->postTweet($text, $target->id);
     }
 
-    private function isListFollow($target_screen_name)
+    public function isListFollow($target_screen_name)
     {
         $result = $this->getFollowedList($target_screen_name);
         foreach ($result->lists as $li)
@@ -64,16 +64,16 @@ class TwitterModelTrend extends TwitterModel
         return false;
     }
 
-    private function followList($target_screen_name)
+    public function followList($target_screen_name)
     {
         return $result = $this->postFollowMemberCreate($this->owner_name, $this->list_name, $target_screen_name);
     }
 
-	private function loadList($sleg) {
+	public function loadList($sleg) {
 		return $this->getListTimeline($this->owner_name, $this->list_name, $sleg);
 	}
 
-	private function loadMention($from) {
+	public function loadMention($from) {
 		return $this->getMentions($from);
 	}
 

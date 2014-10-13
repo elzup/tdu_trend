@@ -10,6 +10,7 @@ class Tweet
     public $isReply;
     public $client_name;
     public $source;
+    public $timestamp;
 
     public function __construct(stdClass $t)
     {
@@ -17,6 +18,7 @@ class Tweet
         $this->id = $t->id_str;
         $this->user_screen_name = $t->user->screen_name;
         $this->user_id = $t->user->id;
+        $this->timestamp = strtotime($t->created_at);
 
         $this->isReply = isset($t->in_replay_to_status_id);
         $this->client_name = trimValueA($t->source);

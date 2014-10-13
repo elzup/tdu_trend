@@ -21,4 +21,5 @@ define('DB_TN_SPECIALS', DB_TN_PREFIX . 'specials');
 define('DB_CN_SPECIALS_WORD', 'word');
 define('DB_CN_SPECIALS_TYPE', 'type');
 
+define('MYSQL_TIMESTAMP', 'Y-m-d H:i:s');
 

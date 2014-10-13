@@ -12,7 +12,7 @@ class TrendManager {
 	protected $time_stamp_pre;
 	protected $mem;
 	// word => point
-	protected $map_trend_point;
+	protected $cache_word_list;
 	protected $map_user;
 
 	/**
@@ -35,16 +35,13 @@ class TrendManager {
 		$this->time_stamp_pre = $this->mem->timestamp_tl;
 
 		$this->trendDAO = new TrendModel();
-		$this->initializeSpecialWords();
-
 		$this->twitter = new TwitterModelTrend($connection, $owner_name, $list_name, $mem_json_filename);
+		$this->initializeSpecialWords();
 
 	}
 
 	protected function initializeSpecialWords() {
 		$result = $this->trendDAO->get_special_words();
-		echo '<pre>';
-		var_dump($result);
 		foreach ($result as $reco) {
 			if (empty($reco['word'])) {
 				continue;
@@ -113,12 +110,10 @@ class TrendManager {
 	}
 
 	private function saveTrendPoint() {
-		if (empty($this->map_trend_point)) {
+		if (empty($this->cache_word_list)) {
 			return;
 		}
-		foreach ($this->map_trend_point as $key => $value) {
-			$this->pushPoint(db_table_name_1, $key, $value[0]);
-		}
+		$this->trendDAO->regist_words($this->cache_word_list);
 	}
 
 	/*
@@ -152,12 +147,12 @@ class TrendManager {
 	 */
 
 	private function collectText(Tweet $tw) {
-		$text = $this->shaveText($text);
-		$this->checkMood($text);
+		$text = $this->shaveText($tw->text);
+//		$this->checkMood($text);
 		$tags = popHashTags($text);
 		if (!empty($tags)) {
 			foreach ($tags as $t) {
-				$this->pushWord($t, $tw->user_id);
+				$this->pushWord($t, $tw);
 			}
 		}
 		// 顔文字の判定と処理
@@ -167,19 +162,20 @@ class TrendManager {
 				if (strlen($t) > 16) {
 					continue;
 				}
-				$this->pushWord($t, $tw->user_id);
-				$text = str_replace($t, '', $text);
+				$this->pushWord($t, $tw);
+				$text = str_replace($t, ',', $text);
 			}
 		}
 		// 登録されている(教育された)単語は優先的にチェック
 		foreach ($this->list_word_procede as $p) {
 			if (strpos($text, $p)) {
-				$this->pushWord($p, $tw->user_id);
+				$this->pushWord($p, $tw);
 			}
 		}
+		
 		$words = array_unique((new TinySegmenterarray())->segment($text, 'UTF-8'));
 		foreach ($words as $w) {
-			$this->pushCheckWord($w, $tw->user_id);
+			$this->pushCheckWord($w, $tw);
 		}
 	}
 
@@ -202,8 +198,8 @@ class TrendManager {
 		}
 	}
 
-	private function pushCheckWord($word_base, $id) {
-		$trim_list = array_merge(array_merunserialize(sp_words_ng), unserialize(sp_words_sign));
+	private function pushCheckWord($word_base, Tweet $tw) {
+		$trim_list = array_merge(unserialize(sp_words_ng), unserialize(sp_words_sign));
 		$trim_list[] = "\n";
 		$trim_list[] = "\r";
 		$word = str_replace($trim_list, '', $word_base);
@@ -220,21 +216,16 @@ class TrendManager {
 		if (in_array($word, $this->list_word_ng)) {
 			return false;
 		}
-		$this->pushWord($word, $id);
+		$this->pushWord($word, $tw);
 		return true;
 	}
 
-	private function pushWord($word, $id) {
-		if (isset($this->map_trend_point[$word])) {
-			if (!in_array($id, $this->map_trend_point[$word])) {
-				$this->map_trend_point[$word][] = $id;
-			}
-			$this->map_trend_point[$word][0] += count($this->map_trend_point[$word]) - 1;
-			$this->map_trend_point[$word][0] ++;
-		} else {
-			$this->map_trend_point[$word][0] = 1;
-			$this->map_trend_point[$word][] = $id;
-		}
+	private function pushWord($word, Tweet $tw) {
+		$obj = new stdClass();
+		$obj->word = $word;
+		$obj->twitter_id = $tw->user_id;
+		$obj->timestamp = $tw->timestamp;
+		$this->cache_word_list[] = $obj;
 	}
 
 	/**
@@ -461,7 +452,7 @@ class TrendManager {
 			super_die(array('Warning' => 'Attemp to save empty data', 'method' => __METHOD__));
 		}
 		$data = json_encode($this->mem);
-		//		print_r($data);
+		var_dump($data);
 		file_put_contents($this->mem_json_filename, $data) or super_die(array('Error' => 'File put', 'method' => __METHOD__));
 	}
 

@@ -338,4 +338,6 @@ function getTimeMessage() {
 }
 
 
-?>
+function implode_ex() {
+	
+}
