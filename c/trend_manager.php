@@ -1,6 +1,5 @@
 <?php
 
-
 class TrendManager {
 
 	protected $list_name;
@@ -37,7 +36,6 @@ class TrendManager {
 		$this->trendDAO = new TrendModel();
 		$this->twitter = new TwitterModelTrend($connection, $owner_name, $list_name, $mem_json_filename);
 		$this->initializeSpecialWords();
-
 	}
 
 	protected function initializeSpecialWords() {
@@ -67,12 +65,15 @@ class TrendManager {
 	}
 
 	public function manageTrendHour() {
-		$this->list_tweet = $this->twitter->loadList($this->mem->since_list);
-		$data = $this->shiftPopDb(db_table_name_1, db_table_name_2);
-		$words = $this->collectTopTrend($data);
-		$chains = $this->createChainNum($words);
+		$this->manage();
+		$words = array(
+			'hoge' => 10,
+			'fuga' => 100,
+			'piyo' => 1000,
+			'hogera' => 222,
+		);
+		$chains = array('fuga' => 10);
 		$this->twitter->tweetTrend($words, $chains);
-		$this->mem->timestamp_post = time();
 		$this->saveMemFile();
 	}
 
@@ -172,7 +173,7 @@ class TrendManager {
 				$this->pushWord($p, $tw);
 			}
 		}
-		
+
 		$words = array_unique((new TinySegmenterarray())->segment($text, 'UTF-8'));
 		foreach ($words as $w) {
 			$this->pushCheckWord($w, $tw);
@@ -439,7 +440,6 @@ class TrendManager {
 		var_dump($this->trendDAO->regist_procede_word($word));
 	}
 
-
 	// ----------------- Mem file IO ----------------- //
 	private function loadMemFile($filename) {
 		$data = file_get_contents($filename) or super_die(array('Error' => 'File get', 'method' => __METHOD__));
@@ -485,34 +485,7 @@ class TrendManager {
 		return (date("i") + 7) % 5 == 0;
 	}
 
-	public function createChainText($chain) {
-		return ($chain <= 1 ? '' : "【{$chain}連続】");
-	}
-
-	public function createRateTextFromPoint($point, $only = false) {
-		$text_rate = "";
-//		$point_t = $point;
-		if ($point < 15) {
-			$point /= 15;
-			$point ++;
-		} else {
-			$point = sqrt(sqrt($point * 100)) / 2;
-			if ($point < 1) {
-				$point = 1;
-			}
-		}
-		while ($point-- >= 1) {
-			$text_rate.= ($only ? "[llll]" : "■");
-		}
-		$point_least = ($point + 1) * 6;
-		while ($point_least -- >= 1) {
-			$text_rate .= "l";
-		}
-
-		return $text_rate;
-	}
-
-	private function createChainNum($words) {
+	public function createChainNum($words) {
 		$chains_pre = $this->mem->chain;
 		$chains = array();
 		foreach ($words as $word => $v) {
@@ -523,157 +496,6 @@ class TrendManager {
 		}
 		$this->mem->chain = $chains;
 		return $chains;
-	}
-
-	private function createRateTextFromPointDay($point) {
-		$text_rate = "";
-//		$point_t = $point;
-		if ($point < 15) {
-			$point /= 15;
-			$point ++;
-		} else {
-			$point = sqrt(sqrt($point * 100)) / 3;
-			if ($point < 1) {
-				$point = 1;
-			}
-		}
-		while ($point-- >= 1) {
-			$text_rate.= "★";
-		}
-		$point_least = ($point + 1) * 6;
-		while ($point_least-- >= 1) {
-			$text_rate .= "l";
-		}
-
-		return $text_rate;
-	}
-
-	private function rateSpeed($a) {
-		if ($a > 1000) {
-			return "(:3っ)っ 三三三=ｰ";
-		} else if ($a > 500) {
-			return "(:3っ)っ 三三=ｰ";
-		} else if ($a > 100) {
-			return "(:3っ)っ ==-";
-		} else if ($a > 50) {
-			return "(:3っ)っ)))";
-		}
-		return "(:3っ)っ";
-	}
-
-	private function rateLaugh($a) {
-		$text = "( ﾟ∀ﾟ)";
-		$i = 2;
-		while ($a > 0) {
-			$text .= "w";
-			$a -= pow($i, 2);
-			$i++;
-		}
-		return $text;
-	}
-
-	private function rateSleep($a) {
-		$text = "(|3[   ]";
-		$i = 1;
-		while ($a > 0) {
-			$text .= "z";
-			$a -= $i++;
-		}
-		return $text;
-	}
-
-	private function convertArrayPointFormat($data) {
-		$data_f = array();
-		foreach ($data as $datum) {
-			$data_f[$datum['text']] = $datum['count'];
-		}
-		return $data_f;
-	}
-
-	private function decoratePanel($str) {
-		return "('ω')o[{$str}]o";
-	}
-
-	// ----------------- Initializing project debug ----------------- //
-
-	/*
-	 * output json file from DB
-	 * table => SpecialWord
-	 * t: topCount
-	 * n: hourTweetnum
-	 * m: hourTweetNumP  <-??????
-	 * l: endTweetID     <- since_id
-	 */
-	public function _initializeMemFile() {
-		$data = array();
-		//        $data['point_top'] = $row['word'];
-		$vals = preg_split("/ /", "t l e n m");
-		$keys = preg_split("/ /", "point_top since_list since_mention count_hour count_hourp");
-		foreach ($vals as $i => $v) {
-			$data[$keys[$i]] = $this->_getConditionDB($v);
-		}
-		$this->mem = $data;
-	}
-
-	private function _getConditionDB($type_value) {
-		$condition = array('type' => $type_value);
-		$result = DB::getData(db_table_name_spe, 'word', $condition);
-		DB::delete(db_table_name_spe, $condition);
-		return $result;
-	}
-
-	public function _initializeMemDB() {
-		$data = array();
-		//        $data['point_top'] = $row['word'];
-		$vals = preg_split("/ /", "t l e n m");
-		foreach ($vals as $i => $v) {
-			$this->_dropConditionDB($v);
-		}
-	}
-
-	private function _dropConditionDB($type_value) {
-		$condition = array('type' => $type_value);
-		DB::delete(db_table_name_spe, $condition);
-	}
-
-	private function _createRateTextFromPoint_old($point) {
-		if ($point > $this->mem->point_top) {
-			$this->mem->point_top = $point;
-			return " ■■■■■ ☆new Record!!{$point}P";
-		}
-		if ($point < 10) {
-			return " ■";
-		}
-		if ($point < 20) {
-			return " ■■";
-		}
-		if ($point < 50) {
-			return " ■■■";
-		}
-		if ($point < 100) {
-			return " ■■■■";
-		}
-		return " ■■■■■";
-	}
-
-	private function _createRateTextFromPointDay_old($point) {
-		if ($point > $this->mem->point_top_day) {
-			$this->mem->point_top_day = $point;
-			return " ★★★★★ new Record!!{$point}P";
-		}
-		if ($point < 10) {
-			return " ★";
-		}
-		if ($point < 30) {
-			return " ★★";
-		}
-		if ($point < 50) {
-			return " ★★★";
-		}
-		if ($point < 100) {
-			return " ★★★★";
-		}
-		return " ★★★★★";
 	}
 
 	public function _memoryMoodInitialize() {

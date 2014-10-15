@@ -17,10 +17,10 @@ class TwitterModelTrend extends TwitterModel
         foreach ($words as $key => $value)
         {
             $text .= $key;
-            $text .= $this->createRateTextFromPoint($value, ma_only);
+            $text .= createRateTextFromPoint($value, ma_only);
             if (!empty($chains[$key]))
             {
-                $text .= $this->createChainText($chains[$key]);
+                $text .= createChainText($chains[$key]);
             }
             $text .= "\n";
         }
@@ -35,7 +35,7 @@ class TwitterModelTrend extends TwitterModel
     {
         $text = "【Daily Treand】\n";
         foreach ($words as $key => $value) {
-			$text .= $key . $this->createRateTextFromPointDay($value) . "\n";
+			$text .= $key . createRateTextFromPointDay($value) . "\n";
 		}
 		if (ma_debug_tweet) {
 			echo $text;
