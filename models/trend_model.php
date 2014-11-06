@@ -45,9 +45,53 @@ class TrendModel extends PDO {
 		return $stmt->execute();
 	}
 
-	public function loadTopWords() {
-		$result = $this->convertArrayPointFormat(DB::getTable(db_table_name_3, null, null, 50, 'count', true));
-		return $result;
+	public function insert_logs($words) {
+		$dh = date(MYSQL_TIMESTAMP_DATEHOUR);
+		foreach ($words as $word => $point) {
+			$this->insert_log($word, $point, $dh);
+		}
+	}
+
+	public function insert_memorys($words) {
+		$date = date(MYSQL_TIMESTAMP_DATE);
+		foreach ($words as $word => $point) {
+			$this->insert_memory($word, $point, $date);
+		}
+	}
+
+	private function insert_log($word, $point, $datehour) {
+		$stmt = $this->prepare('INSERT INTO ' . DB_TN_LOGS . ' (' . DB_CN_LOGS_WORD . ', ' . DB_CN_LOGS_POINT . ', ' . DB_CN_LOGS_DATEHOUR . ') VALUES (:WORD, :POINT, :DATEHOUR)');
+		$stmt->bindValue(':WORD', $word);
+		$stmt->bindValue(':POINT', $point);
+		$stmt->bindValue(':DATEHOUR', $datehour);
+		return $stmt->execute();
+	}
+
+	private function insert_memory($word, $count, $date) {
+		$stmt = $this->prepare('INSERT INTO ' . DB_TN_MEMORYS . ' (' . DB_CN_MEMORYS_WORD . ', ' . DB_CN_MEMORYS_COUNT . ', ' . DB_CN_MEMORYS_DATE . ') VALUES (:WORD, :COUNT, :DATE) ON DUPLICATE KEY UPDATE ' . DB_TN_MEMORYS . ' = ' . DB_TN_MEMORYS . ' + :COUNT');
+		$stmt->bindValue(':WORD', $word);
+		$stmt->bindValue(':COUNT', $count);
+		$stmt->bindValue(':DATE', $date);
+		return $stmt->execute();
+	}
+
+	public function load_caches($nums = LOAD_NUM) {
+		$words = $this->select_cache_all();
+//		$this->delete_caches_all();
+		return $words;
+	}
+
+	public function delete_caches_all() {
+		$this->query('delete FROM ' . DB_TN_CACHES);
+	}
+
+	public function select_cache_all() {
+		$stmt = $this->query('SELECT * FROM ' . DB_TN_CACHES);
+		return $stmt->fetchAll();
+	}
+
+	public function clean_cache() {
+
 	}
 
 	public function get_special_words() {

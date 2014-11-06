@@ -10,13 +10,13 @@ require_once './config/constants.php';
 require_once './config/keys.php';
 
 /* include controllers */
-require_once('./c/page_controller.php');
-require_once('./c/job_controller.php');
-require_once('./c/trend_manager.php');
+require_once('./controllers/page_controller.php');
+require_once('./controllers/job_controller.php');
+require_once('./controllers/trend_manager.php');
 /* include classes */
-require_once('./m/trend_model.php');
-require_once('./m/twitter_model.php');
-require_once('./m/twitter_model_trend.php');
+require_once('./models/trend_model.php');
+require_once('./models/twitter_model.php');
+require_once('./models/twitter_model_trend.php');
 
 require_once('./classes/memory.php');
 require_once('./classes/tweet.php');

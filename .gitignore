@@ -6,6 +6,7 @@ tags
 nbproject/
 mem.json
 test/
+tmp/
 
 .*
 !.gitignore

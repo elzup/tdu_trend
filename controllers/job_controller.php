@@ -8,6 +8,7 @@ class JobController {
 	}
 
 	public function tweet_hour() {
+		echo '<pre>';
 		$tm = JobController::_generate_manager();
 		$tm->manageTrendHour();
 	}
