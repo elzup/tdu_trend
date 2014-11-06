@@ -1,6 +1,7 @@
 <?php
 
 define('LOAD_NUM', 50);
+define('TOP_LIMIT', 20);
 
 define('DB_TN_PREFIX', 'tt_');
 

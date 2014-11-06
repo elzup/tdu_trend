@@ -66,7 +66,9 @@ class TrendManager {
 
 	public function manageTrendHour() {
 		$this->manage();
-		$this->trendDAO->regist_words($this->cache_word_list);
+		$words = $this->trendDAO->load_caches();
+		// TODO: 上位5個の選出メソッド
+		exit;
 		$words = array(
 			'hoge' => 10,
 			'fuga' => 100,

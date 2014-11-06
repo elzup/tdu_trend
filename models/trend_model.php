@@ -75,14 +75,19 @@ class TrendModel extends PDO {
 		return $stmt->execute();
 	}
 
-	public function load_caches($nums = LOAD_NUM) {
-		$words = $this->select_cache_all();
+	public function load_caches() {
+		$words = $this->select_cache_top();
 //		$this->delete_caches_all();
 		return $words;
 	}
 
 	public function delete_caches_all() {
 		$this->query('delete FROM ' . DB_TN_CACHES);
+	}
+
+	public function select_cache_top($limit = TOP_LIMIT) {
+		$stmt = $this->query('SELECT * FROM ' . DB_TN_CACHES . ' WHERE ' . DB_CN_CACHES_WORD . ' in ( select ' . DB_CN_CACHES_WORD . ' from( select ' . DB_CN_CACHES_WORD . ' from `tt_caches` group by ' . DB_CN_CACHES_WORD . ' order by count(' . DB_CN_CACHES_WORD . ') DESC limit ' . $limit . ' ) as t)');
+		return $stmt->fetchAll();
 	}
 
 	public function select_cache_all() {
