@@ -355,8 +355,7 @@ function createRateTextFromPoint($point, $only = false) {
 	$text_rate = "";
 //		$point_t = $point;
 	if ($point < 15) {
-		$point /= 15;
-		$point ++;
+		$point = 1;
 	} else {
 		$point = sqrt(sqrt($point * 100)) / 2;
 		if ($point < 1) {

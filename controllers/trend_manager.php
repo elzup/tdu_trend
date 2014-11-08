@@ -67,16 +67,14 @@ class TrendManager {
 	public function manageTrendHour() {
 		$this->manage();
 		$words = $this->trendDAO->load_caches();
-		// TODO: 上位5個の選出メソッド
-		exit;
-		$words = array(
-			'hoge' => 10,
-			'fuga' => 100,
-			'piyo' => 1000,
-			'hogera' => 222,
-		);
-		$chains = array('fuga' => 10);
-		$this->twitter->tweetTrend($words, $chains);
+		// 出現回数を記録
+		$this->trendDAO->insert_memorys($this->sortByCount($words));
+		$trend_words = $this->collectTrends($words);
+		var_dump($trend_words);
+		$this->trendDAO->insert_logs($trend_words);
+		$chains = array();
+		$this->trendDAO->insert_memorys($trend_words);
+		$this->twitter->tweetTrend($trend_words, $chains);
 		$this->saveMemFile();
 	}
 
@@ -375,6 +373,46 @@ class TrendManager {
 	}
 
 	// ----------------- TrendCollecting ----------------- //
+	private function sortByCount($words) {
+		$arr = array();
+		foreach ($words as $word) {
+			if (!isset($arr[$word->word])) {
+				$arr[$word->word] = 0;
+			}
+			$arr[$word->word] ++;
+		}
+		return $arr;
+	}
+
+	private function collectTrends($words, $num = TREND_HOUR_WORD_NUM) {
+		$counts = array();
+		$persons = array();
+		foreach ($words as $word) {
+			if (!isset($counts[$word->word])) {
+				$counts[$word->word] = 0;
+				$persons[$word->word] = array();
+			}
+			$counts[$word->word]++;
+			if (!in_array($i = $word->twitter_id, $persons[$word->word])) {
+				$persons[$word->word][] = $i;
+			}
+		}
+		foreach ($counts as $word => &$count) {
+			$count = $this->reflectPersion($count, count($persons[$word]));
+		}
+		arsort($counts);
+		$tmp = array_chunk($counts, $num, TRUE);
+		return $tmp[0];
+	}
+
+	private function reflectPersion($count, $person_num) {
+		return floor($count * $this->personRate($person_num));
+	}
+
+	private function personRate($num) {
+		return sqrt($num / 2);
+	}
+
 	private function collectTopTrend($data_tmp) {
 		$data = $this->trendSort($data_tmp);
 		$tops = array();

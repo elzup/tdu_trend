@@ -11,6 +11,8 @@ tmp/
 .*
 !.gitignore
 
+env*
+
 vendor/
 config/keys.php
 composer.lock

@@ -68,7 +68,7 @@ class TrendModel extends PDO {
 	}
 
 	private function insert_memory($word, $count, $date) {
-		$stmt = $this->prepare('INSERT INTO ' . DB_TN_MEMORYS . ' (' . DB_CN_MEMORYS_WORD . ', ' . DB_CN_MEMORYS_COUNT . ', ' . DB_CN_MEMORYS_DATE . ') VALUES (:WORD, :COUNT, :DATE) ON DUPLICATE KEY UPDATE ' . DB_TN_MEMORYS . ' = ' . DB_TN_MEMORYS . ' + :COUNT');
+		$stmt = $this->prepare('INSERT INTO ' . DB_TN_MEMORYS . ' (' . DB_CN_MEMORYS_WORD . ', ' . DB_CN_MEMORYS_COUNT . ', ' . DB_CN_MEMORYS_DATE . ') VALUES (:WORD, :COUNT, :DATE) ON DUPLICATE KEY UPDATE ' . DB_CN_MEMORYS_COUNT . ' = ' . DB_CN_MEMORYS_COUNT . ' + :COUNT');
 		$stmt->bindValue(':WORD', $word);
 		$stmt->bindValue(':COUNT', $count);
 		$stmt->bindValue(':DATE', $date);
@@ -87,7 +87,7 @@ class TrendModel extends PDO {
 
 	public function select_cache_top($limit = TOP_LIMIT) {
 		$stmt = $this->query('SELECT * FROM ' . DB_TN_CACHES . ' WHERE ' . DB_CN_CACHES_WORD . ' in ( select ' . DB_CN_CACHES_WORD . ' from( select ' . DB_CN_CACHES_WORD . ' from `tt_caches` group by ' . DB_CN_CACHES_WORD . ' order by count(' . DB_CN_CACHES_WORD . ') DESC limit ' . $limit . ' ) as t)');
-		return $stmt->fetchAll();
+		return $stmt->fetchAll(PDO::FETCH_CLASS);
 	}
 
 	public function select_cache_all() {
@@ -95,15 +95,18 @@ class TrendModel extends PDO {
 		return $stmt->fetchAll();
 	}
 
-	public function clean_cache() {
-
-	}
-
 	public function get_special_words() {
 		$sql = 'SELECT * FROM ' . DB_TN_SPECIALS;
 		$stmt = $this->prepare($sql);
 		$stmt->execute();
 		return $this->stmt_to_row($stmt);
+	}
+
+	public function check_trendy($words) {
+	}
+
+	public function count_memory($word) {
+
 	}
 
 	private function stmt_to_row($stmt) {
