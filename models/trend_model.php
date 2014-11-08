@@ -77,7 +77,7 @@ class TrendModel extends PDO {
 
 	public function load_caches() {
 		$words = $this->select_cache_top();
-//		$this->delete_caches_all();
+		$this->delete_caches_all();
 		return $words;
 	}
 

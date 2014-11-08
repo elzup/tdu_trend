@@ -20,12 +20,9 @@ class TwitterModelTrend extends TwitterModel {
 			}
 			$text .= "\n";
 		}
-		if (DEBUG) {
-			echo 'tweet text: ' . PHP_EOL;
-			echo $text;
-		} else {
-			$this->postTweet($text);
-		}
+		echo 'tweet text: ' . PHP_EOL;
+		echo $text;
+		$this->postTweet($text);
 	}
 
 	public function tweetTrendDay($words) {

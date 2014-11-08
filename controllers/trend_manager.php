@@ -70,7 +70,6 @@ class TrendManager {
 		// 出現回数を記録
 		$this->trendDAO->insert_memorys($this->sortByCount($words));
 		$trend_words = $this->collectTrends($words);
-		var_dump($trend_words);
 		$this->trendDAO->insert_logs($trend_words);
 		$chains = array();
 		$this->trendDAO->insert_memorys($trend_words);
@@ -175,7 +174,8 @@ class TrendManager {
 			}
 		}
 
-		$words = array_unique((new TinySegmenterarray())->segment($text, 'UTF-8'));
+		$tiny = new TinySegmenterarray();
+		$words = array_unique($tiny->segment($text, 'UTF-8'));
 		foreach ($words as $w) {
 			$this->pushCheckWord($w, $tw);
 		}
