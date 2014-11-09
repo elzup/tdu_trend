@@ -20,8 +20,8 @@ class TwitterModelTrend extends TwitterModel {
 			}
 			$text .= "\n";
 		}
-//		echo 'tweet text: ' . PHP_EOL;
-//		echo $text;
+		echo 'tweet text: ' . PHP_EOL;
+		echo $text;
 		$this->postTweet($text);
 	}
 

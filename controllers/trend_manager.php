@@ -71,15 +71,12 @@ class TrendManager {
 		$trend_words = $this->collectTrends($words);
 		$this->trendDAO->insert_logs($trend_words);
 		$chains = array();
-		$this->trendDAO->insert_memorys($trend_words);
 		$this->twitter->tweetTrend($trend_words, $chains);
 		$this->saveMemFile();
 	}
 
 	public function manageTrendDay() {
 		$words = $this->trendDAO->load_logs_yesterday();
-		var_dump($words);
-		
 		$this->twitter->tweetTrendDay($words);
 		$this->mem->timestamp_postday = time();
 		$this->saveMemFile();
@@ -396,9 +393,11 @@ class TrendManager {
 				$persons[$word->word][] = $i;
 			}
 		}
+		var_dump($counts);
 		foreach ($counts as $word => &$count) {
 			$count = $this->reflectPersion($count, count($persons[$word]));
 		}
+		var_dump($counts);
 		arsort($counts);
 		$tmp = array_chunk($counts, $num, TRUE);
 		return $tmp[0];
@@ -409,7 +408,7 @@ class TrendManager {
 	}
 
 	private function personRate($num) {
-		return sqrt($num / 2);
+		return sqrt($num);
 	}
 
 	private function collectTopTrend($data_tmp) {
