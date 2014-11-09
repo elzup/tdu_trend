@@ -20,15 +20,15 @@ class TwitterModelTrend extends TwitterModel {
 			}
 			$text .= "\n";
 		}
-		echo 'tweet text: ' . PHP_EOL;
-		echo $text;
+//		echo 'tweet text: ' . PHP_EOL;
+//		echo $text;
 		$this->postTweet($text);
 	}
 
 	public function tweetTrendDay($words) {
 		$text = "【Daily Treand】\n";
-		foreach ($words as $key => $value) {
-			$text .= $key . createRateTextFromPointDay($value) . "\n";
+		foreach ($words as $w) {
+			$text .= $w->word . createRateTextFromPointDay($w->point_sum) . "\n";
 		}
 		if (ma_debug_tweet) {
 			echo $text;

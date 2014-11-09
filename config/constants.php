@@ -4,6 +4,7 @@ define('LOAD_NUM', 50);
 define('TOP_LIMIT', 20);
 
 define('TREND_HOUR_WORD_NUM', 6);
+define('TREND_DAY_WORD_NUM', 6);
 
 define('DB_TN_PREFIX', 'tt_');
 

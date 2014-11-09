@@ -65,7 +65,6 @@ class TrendManager {
 	}
 
 	public function manageTrendHour() {
-		$this->manage();
 		$words = $this->trendDAO->load_caches();
 		// 出現回数を記録
 		$this->trendDAO->insert_memorys($this->sortByCount($words));
@@ -78,9 +77,9 @@ class TrendManager {
 	}
 
 	public function manageTrendDay() {
-		$this->list_tweet = $this->twitter->loadList($this->mem->since_list);
-		$data = $this->shiftPopDb(db_table_name_2, db_table_name_3);
-		$words = $this->collectTopTrend($data);
+		$words = $this->trendDAO->load_logs_yesterday();
+		var_dump($words);
+		
 		$this->twitter->tweetTrendDay($words);
 		$this->mem->timestamp_postday = time();
 		$this->saveMemFile();
@@ -92,13 +91,13 @@ class TrendManager {
 
 	private function manageListTL() {
 		if (empty($this->list_tweet)) {
-			echo "Non newTweet" . PHP_EOL;
+//			echo "Non newTweet" . PHP_EOL;
 			return;
 		}
 		$lastId = $this->mem->since_list;
 		foreach ($this->list_tweet as $tweet) {
 			$tw = new Tweet($tweet);
-			echo $tw;
+//			echo $tw;
 			$lastId = max($lastId, $tw->id);
 			if ($this->isFillterTweet($tw)) {
 				continue;

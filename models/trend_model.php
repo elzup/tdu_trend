@@ -81,6 +81,16 @@ class TrendModel extends PDO {
 		return $words;
 	}
 
+	public function load_logs_yesterday() {
+		$yesterday = date(MYSQL_TIMESTAMP_DATE, time() - (60 * 60 * 24));
+		return $this->select_logs_date($yesterday);
+	}
+
+	public function select_logs_date($date, $num = TREND_DAY_WORD_NUM) {
+		$stmt = $this->query('SELECT ' . DB_CN_LOGS_WORD . ', sum(' . DB_CN_LOGS_POINT . ') as point_sum FROM `' . DB_TN_LOGS . '` WHERE ' . DB_CN_LOGS_DATEHOUR . ' between \'' . $date . ' 00:00:00\' and \'' . $date . ' 23:59:59\' group by ' . DB_CN_LOGS_WORD . ' ORDER BY sum(point) DESC LIMIT ' . $num);
+		return $stmt->fetchAll(PDO::FETCH_CLASS);
+	}
+
 	public function delete_caches_all() {
 		$this->query('delete FROM ' . DB_TN_CACHES);
 	}
