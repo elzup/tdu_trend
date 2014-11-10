@@ -200,14 +200,17 @@ class TrendManager {
 		$trim_list = array_merge(unserialize(sp_words_ng), unserialize(sp_words_sign));
 		$trim_list[] = "\n";
 		$trim_list[] = "\r";
-		$word = str_replace($trim_list, '', $word_base);
+
+		$word_base2 = trimWord($word_base);
+		// 最後の半角、全角スペースを、空文字に置き換える
+		$word = str_replace($trim_list, '', $word_base2);
 		//         $word = preg_replace('/^(w|ｗ){1,5}$/u', "ｗｗｗ", $word);                //草刈機
 		//         $word = preg_replace('/^(w|ｗ){6,10}$/u', "ｗｗｗｗｗｗｗ", $word);
 		//         $word = preg_replace('/^(w|ｗ){11,}$/u', "ｗｗｗｗｗｗｗｗｗｗｗ", $word);
 		$len = strlen($word);
 		$mb_len = mb_strlen($word);
 		// 単語の長さが短い場合
-		if (($len == $mb_len && $len < 3 ) || $mb_len == 1 || preg_match("/^[ぁ-んー]{0,3}$/u", $word) || preg_match('/^[一-龠][ぁ-んー]?$/u', $word)) {
+		if (($len == $mb_len && $len <= 3 ) || $mb_len == 1 || preg_match("/^[ぁ-んー]{0,3}$/u", $word) || preg_match('/^[一-龠][ぁ-んー]?$/u', $word)) {
 			return false;
 		}
 		// ngな単語を含んでいる場合

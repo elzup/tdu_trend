@@ -441,3 +441,7 @@ function convertArrayPointFormat($data) {
 function decoratePanel($str) {
 	return "('ω')o[{$str}]o";
 }
+
+function trimWord($word) {
+	return preg_replace('/[ 　]+$/u', '', preg_replace('/^[ 　]+/u', '', trim($word)));
+}
