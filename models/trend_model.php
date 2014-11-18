@@ -116,7 +116,13 @@ class TrendModel extends PDO {
 	}
 
 	public function count_memory($word) {
-
+        $date_after7 = date(MYSQL_TIMESTAMP_DATE, strtotime('-7day'));
+		$stmt = $this->prepare('SELECT sum(`count`) as "sum" FROM `tt_memorys` WHERE `word` = :WORD AND `date` > ' . $date_after7);
+		$stmt->bindValue(':WORD', $word);
+        $stmt->execute();
+        $fetch = $stmt->fetchAll(PDO::FETCH_CLASS);
+        $res = $fetch[0];
+        return $res->sum;
 	}
 
 	private function stmt_to_row($stmt) {

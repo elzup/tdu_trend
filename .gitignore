@@ -7,6 +7,10 @@ nbproject/
 mem.json
 test/
 tmp/
+plan/
+
+*.css
+*.js
 
 .*
 !.gitignore

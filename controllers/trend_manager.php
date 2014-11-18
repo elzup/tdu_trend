@@ -387,6 +387,9 @@ class TrendManager {
 		$counts = array();
 		$persons = array();
 		foreach ($words as $word) {
+            if (!trimWord($word->word)) {
+                continue;
+            }
 			if (!isset($counts[$word->word])) {
 				$counts[$word->word] = 0;
 				$persons[$word->word] = array();
@@ -399,6 +402,7 @@ class TrendManager {
 		var_dump($counts);
 		foreach ($counts as $word => &$count) {
 			$count = $this->reflectPersion($count, count($persons[$word]));
+			$count = $this->reflectMemory($word, $count);
 		}
 		var_dump($counts);
 		arsort($counts);
@@ -406,11 +410,16 @@ class TrendManager {
 		return $tmp[0];
 	}
 
-	private function reflectPersion($count, $person_num) {
-		return floor($count * $this->personRate($person_num));
+	private function reflectMemory($word, $count) {
+        $num = $this->trendDAO->count_memory($word);
+        return $count - sqrt($num);
 	}
 
-	private function personRate($num) {
+	private function reflectPersion($count, $person_num) {
+		return floor($count * $this->personRaito($person_num));
+	}
+
+	private function personRaito($num) {
 		return sqrt($num);
 	}
 

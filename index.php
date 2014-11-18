@@ -22,6 +22,10 @@ require_once('./classes/memory.php');
 require_once('./classes/tweet.php');
 require_once('./helpers/function.php');
 
+if (ENV != ENV_DEVELOP && @$_GET['key'] != SECRET_KEY) {
+    die('invalid access');
+}
+
 $app = new \Slim\Slim(array(
     'debug'              => true,
     'log.level'          => \Slim\Log::DEBUG,
@@ -33,6 +37,8 @@ $app->get('/', '\PageController:showIndex');
 
 $app->get('/job/', '\JobController:walk_tl');
 $app->get('/job/h', '\JobController:tweet_hour');
+$app->get('/job/d', '\JobController:tweet_day');
+
 $app->get('/job/d', '\JobController:tweet_day');
 
 $app->get('/job/r/:word', function($word) {
