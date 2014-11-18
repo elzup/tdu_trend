@@ -3,11 +3,13 @@
 class JobController {
 
 	public function walk_tl() {
+        $this->checkAuth();
 		$tm = JobController::_generate_manager();
 		$tm->manage();
 	}
 
 	public function tweet_hour() {
+        $this->checkAuth();
 		echo '<pre>';
 		$tm = JobController::_generate_manager();
 		$tm->manage();
@@ -15,12 +17,19 @@ class JobController {
 	}
 
 	public function tweet_day() {
+        $this->checkAuth();
 		echo '<pre>';
 		$tm = JobController::_generate_manager();
 		$tm->manage();
 		$tm->manageTrendHour();
 		$tm->manageTrendDay();
 	}
+
+    private function checkAuth() {
+        if (ENV != ENV_DEVELOP && @$_GET['key'] != SECRET_KEY) {
+                die('invalid access');
+        }
+    }
 
 	public function regist_word($word) {
 		$tm = JobController::_generate_manager();

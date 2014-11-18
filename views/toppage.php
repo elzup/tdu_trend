@@ -1,0 +1,3 @@
+<?php
+
+now_trends

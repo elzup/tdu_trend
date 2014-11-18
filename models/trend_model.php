@@ -75,6 +75,11 @@ class TrendModel extends PDO {
 		return $stmt->execute();
 	}
 
+	public function load_logs($time) {
+		$stmt = $this->query('SELECT * FROM ' . DB_TN_LOGS . ' WHERE ' . DB_CN_LOGS_DATEHOUR. ' = \'' . $time . '\' ORDER BY ' . DB_CN_LOGS_POINT. ' DESC');
+		return !!$stmt ? $stmt->fetchAll(PDO::FETCH_CLASS) : NULL;
+	}
+
 	public function load_caches() {
 		$words = $this->select_cache_top();
 		$this->delete_caches_all();

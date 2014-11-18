@@ -68,8 +68,13 @@ class TrendManager {
 		$words = $this->trendDAO->load_caches();
 		// 出現回数を記録
 		$this->trendDAO->insert_memorys($this->sortByCount($words));
-		$trend_words = $this->collectTrends($words);
-		$this->trendDAO->insert_logs($trend_words);
+		$trend_words_all = $this->collectTrends($words);
+
+		$this->trendDAO->insert_logs($trend_words_all);
+
+		$tmp = array_chunk($trend_words_all, $num, TRUE);
+		$trend_words = $tmp[0];
+
 		$chains = array();
 		$this->twitter->tweetTrend($trend_words, $chains);
 		$this->saveMemFile();
@@ -404,15 +409,13 @@ class TrendManager {
 			$count = $this->reflectPersion($count, count($persons[$word]));
 			$count = $this->reflectMemory($word, $count);
 		}
-		var_dump($counts);
 		arsort($counts);
-		$tmp = array_chunk($counts, $num, TRUE);
-		return $tmp[0];
+        return $counts;
 	}
 
 	private function reflectMemory($word, $count) {
         $num = $this->trendDAO->count_memory($word);
-        return $count - sqrt($num);
+        return max($count - sqrt($num), 0);
 	}
 
 	private function reflectPersion($count, $person_num) {
