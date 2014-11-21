@@ -9,8 +9,8 @@ class JobController {
 	}
 
 	public function tweet_hour() {
+        echo '<pre>';
         $this->checkAuth();
-		echo '<pre>';
 		$tm = JobController::_generate_manager();
 		$tm->manage();
 		$tm->manageTrendHour();
@@ -18,7 +18,6 @@ class JobController {
 
 	public function tweet_day() {
         $this->checkAuth();
-		echo '<pre>';
 		$tm = JobController::_generate_manager();
 		$tm->manage();
 		$tm->manageTrendHour();

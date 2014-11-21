@@ -72,7 +72,7 @@ class TrendManager {
 
 		$this->trendDAO->insert_logs($trend_words_all);
 
-		$tmp = array_chunk($trend_words_all, $num, TRUE);
+		$tmp = array_chunk($trend_words_all, TREND_HOUR_WORD_NUM, TRUE);
 		$trend_words = $tmp[0];
 
 		$chains = array();
