@@ -75,7 +75,7 @@ class TrendManager {
 		$tmp = array_chunk($trend_words_all, TREND_HOUR_WORD_NUM, TRUE);
 		$trend_words = $tmp[0];
 
-		$chains = array();
+		$chains = $this->trendDAO->check_chains($trend_words);
 		$this->twitter->tweetTrend($trend_words, $chains);
 		$this->saveMemFile();
 	}

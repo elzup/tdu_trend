@@ -75,8 +75,13 @@ class TrendModel extends PDO {
 		return $stmt->execute();
 	}
 
-	public function load_logs($time) {
-		$stmt = $this->query('SELECT * FROM ' . DB_TN_LOGS . ' WHERE ' . DB_CN_LOGS_DATEHOUR. ' = \'' . $time . '\' ORDER BY ' . DB_CN_LOGS_POINT. ' DESC');
+	public function load_logs($time, $limit = NULL) {
+		$sql = 'SELECT * FROM ' . DB_TN_LOGS . ' WHERE ' . DB_CN_LOGS_DATEHOUR . ' = \'' . $time . '\' ORDER BY ' . DB_CN_LOGS_POINT . ' DESC';
+		if (isset($limit)) {
+			$sql .= ' LIMIT ' . $limit;
+		}
+		echo $sql;
+		$stmt = $this->query($sql);
 		return !!$stmt ? $stmt->fetchAll(PDO::FETCH_CLASS) : NULL;
 	}
 
@@ -118,16 +123,58 @@ class TrendModel extends PDO {
 	}
 
 	public function check_trendy($words) {
+		
+	}
+
+	/**
+	 * 単語リストがそれぞれ何度連続でトレンド入りしたのかをチェックする
+	 * @param string[] $words
+	 * @return int[]
+	 */
+	public function check_chains($words) {
+		$h = 1;
+		$chains = array();
+		foreach ($words as $word => $p) {
+			$chains[$word] = 0;
+		}
+//		echo "---\n";
+//		echo json_encode($words);
+		while (TRUE) {
+			$time = date(MYSQL_TIMESTAMP_DATEHOUR, strtotime('-' . $h . 'hour'));
+			$logs = $this->load_logs($time);
+//			echo json_encode($logs);
+			$k = FALSE;
+			foreach ($words as $word => $p) {
+				if (($h - 1) != $chains[$word]) {
+					continue;
+				}
+				foreach ($logs as $i => $log) {
+					if ($log->word != $word) {
+						continue;
+					}
+					$chains[$word] ++;
+					break;
+				}
+				$k = TRUE;
+			}
+			if (!$k) {
+				break;
+			}
+			$h++;
+		}
+//		echo json_encode($chains);
+//		echo "\n---\n";
+		return $chains;
 	}
 
 	public function count_memory($word) {
-        $date_after7 = date(MYSQL_TIMESTAMP_DATE, strtotime('-7day'));
-		$stmt = $this->prepare('SELECT sum(`count`) as "sum" FROM `tt_memorys` WHERE `word` = :WORD AND `date` > ' . $date_after7);
+		$date_after7 = date(MYSQL_TIMESTAMP_DATE, strtotime('-7day'));
+		$stmt = $this->prepare('SELECT sum(`' . DB_CN_MEMORYS_COUNT . '`) as "sum" FROM ' . DB_TN_MEMORYS . ' WHERE ' . DB_CN_MEMORYS_WORD . ' = :WORD AND ' . DB_CN_MEMORYS_DATE . '> ' . $date_after7);
 		$stmt->bindValue(':WORD', $word);
-        $stmt->execute();
-        $fetch = $stmt->fetchAll(PDO::FETCH_CLASS);
-        $res = $fetch[0];
-        return $res->sum;
+		$stmt->execute();
+		$fetch = $stmt->fetchAll(PDO::FETCH_CLASS);
+		$res = $fetch[0];
+		return $res->sum;
 	}
 
 	private function stmt_to_row($stmt) {
