@@ -5,11 +5,28 @@
 
 // variables
 @col_main: #6fff0f;
+@col_main_dark: green;
 @col_font_light: white;
+
+@col_font_link_light: @col_main - #444;
+@col_font_link_dark: @col_main - #111;
+
+@fontsize-m: 18px;
 
 body {
     font-family: 'MS PGothic', Osaka, Arial, sans-serif;
 
+}
+
+a {
+    color: @col_font_link_dark;
+    text-decoration: none;
+    &:hover {
+        color: @col_font_link_light;
+    }
+    &:visited {
+        color: @col_font_link_light;
+    }
 }
 
 #content {
@@ -48,8 +65,25 @@ body {
 
 .rankbox {
     padding: 10px;
-    background: @col_main;
+    background: white;
     margin: 10px;
+    box-shadow: 0 0 1px @col_main - #888;
+    border-radius: 2px;
+    border-top: solid 3px @col_main_dark;
+
+    h3 {
+        padding-top: 5px;
+        font-size: @fontsize-m;
+        .date {
+            font-size: 0.7em;
+            &:before {
+                content: '[';
+            }
+            &:after {
+                content: ']';
+            }
+        }
+    }
 }
 
 .rank-table {

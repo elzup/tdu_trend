@@ -7,12 +7,14 @@ define('TOP_LIMIT', 40);
 define('TREND_HOUR_WORD_NUM', 6);
 define('TREND_DAY_WORD_NUM', 6);
 
+define('TREND_HOUR_CARD_NUM_VIEW', 4);
 define('TREND_HOUR_WORD_NUM_VIEW', 6);
 define('TREND_HOUR_WORD_NUM_VIEW_DESC', 20);
 
 define('DB_TN_PREFIX', 'tt_');
 
-define('FORMAT_RANKS_TITLE_DATE', 'Y年m月d日 H時');
+define('FORMAT_RANKS_TITLE_DATEHOUR', 'Y年m月d日 H時');
+define('FORMAT_RANKS_TITLE_DATE', 'Y年m月d日');
 
 // db constants
 define('DB_TN_CACHES', DB_TN_PREFIX . 'caches');
@@ -21,6 +23,7 @@ define('DB_CN_CACHES_TWITTER_ID', 'twitter_id');
 define('DB_CN_CACHES_TIMESTAMP', 'timestamp');
 
 define('DB_TN_LOGS', DB_TN_PREFIX . 'logs');
+define('DB_CN_LOGS_ID', 'log_id');
 define('DB_CN_LOGS_WORD', 'word');
 define('DB_CN_LOGS_POINT', 'point');
 define('DB_CN_LOGS_DATEHOUR', 'datehour');

@@ -1,7 +1,15 @@
 <?php
 /* @var $ranks stdclass[] */
+/* @var $is_wide boolean */
+if (!isset($is_wide)) {
+    $is_wide = FALSE;
+}
 $datehour = $ranks[0]->datehour;
-$rank_title = date(FORMAT_RANKS_TITLE_DATE, strtotime($datehour)) . 'のトレンド';
+if ($is_wide) {
+    $rank_title = date(FORMAT_RANKS_TITLE_DATEHOUR, strtotime($datehour)) . 'のトレンド';
+} else {
+    $rank_title = '<span class="main">' . date("H時", strtotime($datehour)) . 'のトレンド</span><span class="date">' . date(FORMAT_RANKS_TITLE_DATE, strtotime($datehour)). '</span>';
+}
 ?>
 
 <section class="rankbox">
