@@ -44,4 +44,8 @@ if (ENV == ENV_DEVELOP) {
 } else {
     define('SITE_ROOT', '//trend.elzup.com/');
 }
+define('URL_LOG', 'log/');
+define('URL_REGIST', 'regist/');
+define('URL_REGIST_POST', URL_REGIST . 'post/');
+define('URL_HELP', 'help/');
 

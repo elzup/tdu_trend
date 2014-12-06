@@ -1,15 +1,11 @@
 <?php
 /* @var $new_trends stdclass[] */
 /* @var $ranks stdclass[] */
-/* @var $ranks_pre stdclass[] */
 
 ?>
 <div id="content" class="pure-g-r">
     <div id="mainContent" class="pure-u-2-3">
         <?php 
-        require('./views/parts_rank_div.php');
-        $ranks = $ranks_pre;
-        unset($ranks_pre);
         require('./views/parts_rank_div.php');
         ?>
     </div>

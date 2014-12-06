@@ -446,6 +446,9 @@ function trimWord($word) {
 
 function numtodatehour($num) {
     $nums = str_split($num, 2);
-    var_dump($nums);
     return $nums[0] . $nums[1] . '-' . $nums[2] . '-' . $nums[3] . ' ' . $nums[4] . ':00:00';
+}
+
+function datehourtonum($datehour) {
+    return str_replace(array('-', ' '), array('', ''), substr($datehour, 0, 13));
 }
