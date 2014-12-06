@@ -80,7 +80,7 @@ class TrendModel extends PDO {
 		if (isset($limit)) {
 			$sql .= ' LIMIT ' . $limit;
 		}
-		echo $sql;
+//		echo $sql;
 		$stmt = $this->query($sql);
 		return !!$stmt ? $stmt->fetchAll(PDO::FETCH_CLASS) : NULL;
 	}
