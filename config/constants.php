@@ -1,15 +1,20 @@
 <?php
 
+// variables, formats
 define('LOAD_NUM', 50);
 define('TOP_LIMIT', 40);
 
 define('TREND_HOUR_WORD_NUM', 6);
 define('TREND_DAY_WORD_NUM', 6);
 
+define('TREND_HOUR_WORD_NUM_VIEW', 6);
+define('TREND_HOUR_WORD_NUM_VIEW_DESC', 20);
+
 define('DB_TN_PREFIX', 'tt_');
 
 define('FORMAT_RANKS_TITLE_DATE', 'Y年m月d日 H時');
 
+// db constants
 define('DB_TN_CACHES', DB_TN_PREFIX . 'caches');
 define('DB_CN_CACHES_WORD', 'word');
 define('DB_CN_CACHES_TWITTER_ID', 'twitter_id');
@@ -32,4 +37,11 @@ define('DB_CN_SPECIALS_TYPE', 'type');
 define('MYSQL_TIMESTAMP', 'Y-m-d H:i:s');
 define('MYSQL_TIMESTAMP_DATE', 'Y-m-d');
 define('MYSQL_TIMESTAMP_DATEHOUR', 'Y-m-d H:00:00');
+
+// url rootings
+if (ENV == ENV_DEVELOP) {
+    define('SITE_ROOT', '//localhost/tdu_trend/');
+} else {
+    define('SITE_ROOT', '//trend.elzup.com/');
+}
 

@@ -29,14 +29,20 @@ $app = new \Slim\Slim(array(
     'cookies.encrypt'    => true,    //cookie
 ));
 
+// Web views
 $app->get('/', '\PageController:showIndex');
 
+$app->get('/log/:num', function ($num) {
+	(new PageController())->showLog($num);
+});
+
+// CRON jobs
 $app->get('/job/', '\JobController:walk_tl');
 $app->get('/job/h', '\JobController:tweet_hour');
 $app->get('/job/d', '\JobController:tweet_day');
 
 $app->get('/job/r/:word', function($word) {
-	(new JobController()).regist_word($word);
+show(new JobController()).regist_word($word);
 });
 
 $app->get("/info", function() {

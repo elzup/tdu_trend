@@ -1,7 +1,5 @@
 <?php
-
 //ゆ
-
 
 define('rep_hand', '(:?\w|:?[／＼L><＞＜」卍└┘⊃⊂])?');
 define('re_aa_face', '/' . rep_hand . '[\(（][^\(（\)）]+[\)）]' . rep_hand . '/u');
@@ -444,4 +442,10 @@ function decoratePanel($str) {
 
 function trimWord($word) {
 	return preg_replace('/[ 　]+$/u', '', preg_replace('/^[ 　]+/u', '', trim($word)));
+}
+
+function numtodatehour($num) {
+    $nums = str_split($num, 2);
+    var_dump($nums);
+    return $nums[0] . $nums[1] . '-' . $nums[2] . '-' . $nums[3] . ' ' . $nums[4] . ':00:00';
 }

@@ -6,13 +6,6 @@ $rank_title = date(FORMAT_RANKS_TITLE_DATE, strtotime($ranks[0]->datehour)) . 'ã
 <section class="rankbox">
     <h3><?= $rank_title ?></h3>
     <table class="pure-table pure-table-bordered rank-table">
-        <!--thead>
-            <tr>
-                <th>#</th>
-                <th>Word</th>
-                <th>Point</th>
-            </tr>
-        </thead-->
         <tbody>
             <?php foreach ($ranks as $i => $rank): ?>
                 <tr>

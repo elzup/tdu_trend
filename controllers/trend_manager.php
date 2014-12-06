@@ -67,11 +67,9 @@ class TrendManager {
 	public function manageTrendHour() {
         echo '<pre>';
 		$words = $this->trendDAO->load_caches();
-        var_dump($words);
 		// 出現回数を記録
 		$this->trendDAO->insert_memorys($this->sortByCount($words));
 		$trend_words_all = $this->collectTrends($words);
-        var_dump($trend_words_all);
 
         $this->trendDAO->insert_logs($trend_words_all);
 
@@ -79,9 +77,7 @@ class TrendManager {
 		$trend_words = $tmp[0];
 
 		$chains = $this->trendDAO->check_chains($trend_words);
-//		$this->twitter->tweetTrend($trend_words, $chains);
-        var_dump($trend_words);
-        exit;
+		$this->twitter->tweetTrend($trend_words, $chains);
 		$this->saveMemFile();
 	}
 
