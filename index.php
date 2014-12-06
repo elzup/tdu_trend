@@ -33,7 +33,8 @@ $app = new \Slim\Slim(array(
 $app->get('/', '\PageController:showIndex');
 
 $app->get('/log/:num', function ($num) {
-	(new PageController())->showLog($num);
+    $pcon = new PageController();
+	$pcon->showLog($num);
 });
 
 // CRON jobs

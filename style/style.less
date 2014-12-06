@@ -64,12 +64,7 @@ a {
 }
 
 .rankbox {
-    padding: 10px;
-    background: white;
-    margin: 10px;
-    box-shadow: 0 0 1px @col_main - #888;
-    border-radius: 2px;
-    border-top: solid 3px @col_main_dark;
+    .card();
 
     h3 {
         padding-top: 5px;
@@ -84,6 +79,19 @@ a {
             }
         }
     }
+}
+
+.card {
+    .card();
+}
+
+.card() {
+    padding: 10px;
+    background: white;
+    margin: 10px;
+    box-shadow: 0 0 1px @col_main - #888;
+    border-radius: 2px;
+    border-top: solid 3px @col_main_dark;
 }
 
 .rank-table {

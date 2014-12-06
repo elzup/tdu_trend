@@ -11,6 +11,7 @@ class TwitterModelTrend extends TwitterModel {
 
 	// ----------------- tweet Manage Wrap ----------------- //
 	public function tweetTrend($words, $chains = NULL) {
+        $datehour = date('YmdH');
 		$text = "";
 		foreach ($words as $key => $value) {
 			$text .= $key;
@@ -20,6 +21,7 @@ class TwitterModelTrend extends TwitterModel {
 			}
 			$text .= "\n";
 		}
+        $text .= SITE_ROOT . URL_LOG . $datehour;
 		echo 'tweet text: ' . PHP_EOL;
 		echo $text;
 		$this->postTweet($text);

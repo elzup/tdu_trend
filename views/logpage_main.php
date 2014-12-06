@@ -11,9 +11,12 @@
         ?>
     </div>
     <div id="subContent" class="pure-u-1-3">
-        トレンド先導者
-        ハッシュタグトレンド
-        トレンドURL
-        トレンド顔文字
+        <div class="card">
+            トレンド先導者<br />
+            ハッシュタグトレンド<br />
+            トレンドURL<br />
+            トレンド顔文字<br />
+            comming soon
+        </div>
     </div>
 </div>
