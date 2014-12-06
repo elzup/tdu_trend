@@ -6,8 +6,8 @@ class PageController {
         $title = '電大トレンド君 on Web';
 		$trendDAO = new TrendModel();
         $now_time = date(MYSQL_TIMESTAMP_DATEHOUR);
-        $now_time = '2014-12-06 14:00:00';
-        $new_trends = $trendDAO->load_logs($now_time);
+        $now_time = '2014-12-05 16:00:00';
+        $ranks = $new_trends = $trendDAO->load_logs($now_time);
 
         require_once('./views/head.php');
         require_once('./views/body_wrapper_head.php');

@@ -1,8 +1,24 @@
 @charset utf-8;
+// vim: foldmethod=syntax
+
+@import url(http://fonts.googleapis.com/css?family=Raleway:600);
+
+// variables
+@col_main: #6fff0f;
+@col_font_light: white;
+
+body {
+    font-family: 'MS PGothic', Osaka, Arial, sans-serif;
+
+}
+
+#content {
+    margin: 0 200px;
+}
 
 #eyecatch {
-    background: #5f5;
-    padding: 30px;
+    background: @col_main + #777;
+    padding: 30px 0 0;
     height: 500px;
 
     #topcircle {
@@ -10,7 +26,47 @@
         width: 450px;
         background: white;
         border-radius: 50%;
-        margin: 0px auto;
+        .margin-center();
         text-align: center;
+        overflow: hidden;
+        box-shadow: 0 0 75px -15px;
+        border: solid white 5px;
+
+        h1 {
+            background: @col_main;
+            height: 10%;
+            line-height:100%;
+            font-size: 30px;
+            margin: 0 0 10px;
+            padding: 40px;
+            text-shadow: 1px 1px 5px @col_font_light;
+            color: @col_font_light;
+        }
+
     }
+}
+
+.rankbox {
+    padding: 10px;
+    background: @col_main;
+    margin: 10px;
+}
+
+.rank-table {
+    width: 100%;
+    td:nth-of-type(1) {
+        width: 10%;
+    }
+    td:nth-of-type(2) {
+        width: 60%;
+    }
+    td:nth-of-type(3) {
+        width: 30%;
+    }
+}
+
+// simple classes
+
+.margin-center() {
+    margin: 0 auto;
 }

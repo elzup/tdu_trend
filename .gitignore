@@ -9,8 +9,10 @@ test/
 tmp/
 plan/
 
+# compiled files
 *.css
 *.js
+*.xcf
 
 .*
 !.gitignore

@@ -8,6 +8,8 @@ define('TREND_DAY_WORD_NUM', 6);
 
 define('DB_TN_PREFIX', 'tt_');
 
+define('FORMAT_RANKS_TITLE_DATE', 'Y年m月d日 H時');
+
 define('DB_TN_CACHES', DB_TN_PREFIX . 'caches');
 define('DB_CN_CACHES_WORD', 'word');
 define('DB_CN_CACHES_TWITTER_ID', 'twitter_id');
