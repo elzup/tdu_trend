@@ -1,31 +1,31 @@
-@charset utf-8;
 // vim: foldmethod=syntax
 
-@import url(http://fonts.googleapis.com/css?family=Raleway:600);
+@import "../bower_components/materialize/sass/materialize";
+@import "./mixins";
+
 
 // variables
-@col_main: #6fff0f;
-@col_main_dark: green;
-@col_font_light: white;
+$col_main: #6fff0f;
+$col_main_dark: green;
+$col_font_light: white;
 
-@col_font_link_light: @col_main - #444;
-@col_font_link_dark: @col_main - #111;
+$col_font_link_light: $col_main - #444;
+$col_font_link_dark: $col_main - #111;
 
-@fontsize-m: 18px;
+$fontsize-m: 18px;
 
 body {
     font-family: 'MS PGothic', Osaka, Arial, sans-serif;
-
 }
 
 a {
-    color: @col_font_link_dark;
+    color: $col_font_link_dark;
     text-decoration: none;
     &:hover {
-        color: @col_font_link_light;
+        color: $col_font_link_light;
     }
     &:visited {
-        color: @col_font_link_light;
+        color: $col_font_link_light;
     }
 }
 
@@ -34,7 +34,7 @@ a {
 }
 
 #eyecatch {
-    background: @col_main + #777;
+    background: $col_main + #777;
     padding: 30px 0 0;
     height: 500px;
 
@@ -43,32 +43,32 @@ a {
         width: 450px;
         background: white;
         border-radius: 50%;
-        .margin-center();
+        @include margin-center();
         text-align: center;
         overflow: hidden;
         box-shadow: 0 0 75px -15px;
         border: solid white 5px;
 
         h1 {
-            background: @col_main;
+            background: $col_main;
             height: 10%;
             line-height:100%;
             font-size: 30px;
             margin: 0 0 10px;
             padding: 40px;
-            text-shadow: 1px 1px 5px @col_font_light;
-            color: @col_font_light;
+            text-shadow: 1px 1px 5px $col_font_light;
+            color: $col_font_light;
         }
 
     }
 }
 
 .rankbox {
-    .card();
+    @include card();
 
     h3 {
         padding-top: 5px;
-        font-size: @fontsize-m;
+        font-size: $fontsize-m;
         .date {
             font-size: 0.7em;
             &:before {
@@ -81,17 +81,8 @@ a {
     }
 }
 
-.card {
-    .card();
-}
-
-.card() {
-    padding: 10px;
-    background: white;
-    margin: 10px;
-    box-shadow: 0 0 1px @col_main - #888;
-    border-radius: 2px;
-    border-top: solid 3px @col_main_dark;
+card {
+    @include card();
 }
 
 .rank-table {
@@ -113,6 +104,3 @@ a {
 
 // simple classes
 
-.margin-center() {
-    margin: 0 auto;
-}

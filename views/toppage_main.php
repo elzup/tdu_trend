@@ -2,11 +2,11 @@
 /* @var $new_trends stdclass[] */
 /* @var $ranks_list array */
 ?>
-<div id="content" class="pure-g-r">
-    <div id="mainContent" class="pure-u-2-3">
-        <div class="pure-g-r">
+<div id="content" class="row">
+    <div class="col m8">
+        <div class="row">
             <?php foreach ($ranks_list as $v) { ?>
-                <div class="pure-u-1-2">
+                <div class="col m6">
                     <?php
                     $chunks = array_chunk($v, TREND_HOUR_WORD_NUM_VIEW);
                     $ranks = $chunks[0];
@@ -16,7 +16,7 @@
             <?php } ?>
         </div>
     </div>
-    <div id="subContent" class="pure-u-1-3">
+    <div class="col m4">
         <div class="card">
             トレンド先導者<br />
             ハッシュタグトレンド<br />

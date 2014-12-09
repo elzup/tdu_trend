@@ -1,0 +1,19 @@
+{
+  "name": "tdu_trend",
+  "version": "0.0.0",
+  "homepage": "https://github.com/elzzup/tdu_trend",
+  "authors": [
+    "elzzup <guild0105@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "materialize": "*"
+  }
+}

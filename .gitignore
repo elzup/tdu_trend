@@ -11,6 +11,7 @@ plan/
 
 # compiled files
 *.css
+*.css.map
 *.js
 *.xcf
 
@@ -18,6 +19,8 @@ plan/
 !.gitignore
 
 env*
+
+bower_components/
 
 vendor/
 config/keys.php

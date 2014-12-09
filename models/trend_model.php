@@ -78,7 +78,7 @@ class TrendModel extends PDO {
     public function load_logs_recent($num) {
         $recent = date(MYSQL_TIMESTAMP_DATEHOUR, time() - 60 * 60 * ($num - 1));
         if (ENV == ENV_DEVELOP) {
-            $recent = date(MYSQL_TIMESTAMP_DATEHOUR, time() - 60 * 60 * ($num - 1) - 24 * 60 * 50);
+            $recent = date(MYSQL_TIMESTAMP_DATEHOUR, time() - 60 * 60 * ($num - 1) - 24 * 60 * 50 * 4);
         }
         $sql = 'SELECT * FROM ' . DB_TN_LOGS . ' WHERE `' . DB_CN_LOGS_DATEHOUR . '` >= \'' . $recent . '\' ORDER BY ' . DB_CN_LOGS_DATEHOUR . ' DESC , ' . DB_CN_LOGS_POINT .' DESC';
 //		echo $sql;

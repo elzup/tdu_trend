@@ -12,8 +12,6 @@ $url = '';
         <!--link rel="canonical" href="<?= $url ?>" /-->
         <!--link rel="alternate" media="handheld" href="<?= $url ?>" /-->
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <!--<link rel="stylesheet" type="text/css" href="//yui.yahooapis.com/3.18.1/build/cssreset/cssreset-min.css" />-->
-        <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.1.0/pure-min.css">
         <link rel="stylesheet" href="<?= SITE_ROOT ?>style/style.css">
         <link rel="icon" href="favicon.ico" /> 
 
