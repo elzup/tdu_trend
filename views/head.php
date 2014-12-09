@@ -16,8 +16,9 @@ $url = '';
         <link rel="icon" href="favicon.ico" /> 
         <!--Import jQuery before materialize.js-->
         <!--<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>-->
-        <script type="text/javascript" src="<?= URL_JQUERY ?>"></script>
-        <script type="text/javascript" src="<?= URL_MATERIALIZE_JS ?>"></script>
+        <script type="text/javascript" src="<?= URL_LIB_JQUERY ?>"></script>
+        <script type="text/javascript" src="<?= URL_LIB_MATERIALIZE_JS ?>"></script>
+        <script type="text/javascript" src="<?= URL_JS_SCRIPT ?>"></script>
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

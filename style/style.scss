@@ -2,7 +2,6 @@
 
 @import "../bower_components/materialize/sass/materialize";
 
-
 // variables
 $col_main: #6fff0f;
 $col_main_dark: green;
@@ -10,6 +9,8 @@ $col_font_light: white;
 
 $col_font_link_light: $col_main - #444;
 $col_font_link_dark: $col_main - #111;
+
+$height_nav: 64px;
 
 $fontsize-m: 18px;
 
@@ -39,9 +40,11 @@ body {
 }
 
 #eyecatch {
-    background: $col_main + #777;
+    @extend .light-green;
+    @extend .accent-1;
     padding: 30px 0 0;
     height: 500px;
+    background: url(../images/bg_top.png) 0 0;
 
     #topcircle {
         height: 450px;
@@ -70,6 +73,7 @@ body {
 
 .card.card-rankbox {
     .card-content {
+        padding: 8px;
         span.card-title {
             line-height: 23px;
             a {
@@ -90,7 +94,7 @@ body {
     }
 
     .min-date {
-        font-size: 0.7em;
+        font-size: 0.7rem;
         color: green;
         &:before {
             content: '[';
@@ -99,11 +103,39 @@ body {
             content: ']';
         }
     }
-
 }
 
 .card {
     @extend .card;
+}
+
+nav {
+    @extend .light-green;
+    @extend .accent-1;
+    height: $height_nav;
+    box-shadow: none;
+    .nav-wrapper.nav-top {
+
+        .side-nav {
+            li {
+                @extend .light-green;
+                @extend .accent-3;
+                &:hover {
+                    @extend .accent-4;
+                }
+                text-align: center;
+                width: $height_nav * 2;
+                border-radius: $height_nav $height_nav 0 0;
+                $m: 20px;
+                margin-left: $m;
+                margin-right: $m;
+                overflow: hidden;
+                a {
+                    font-size: 1.3rem;
+                }
+            }
+        }
+    }
 }
 
 .rank-table {
@@ -131,5 +163,8 @@ body {
     @extend .waves-effect;
     @extend .white-text;
     margin: 0px;
+    i {
+        margin-left: 5px;
+    }
 }
 

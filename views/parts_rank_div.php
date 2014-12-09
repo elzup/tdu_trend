@@ -34,6 +34,6 @@ $page_link = SITE_ROOT . URL_LOG . datehourtonum($datehour);
         </table>
     </div>
     <div class="card-action">
-        <a class="btn more-btn" href="<?= $page_link ?>">もっと見る</a>
+        <a class="btn more-btn" href="<?= $page_link ?>">More<i class="mdi-av-equalizer right"></i></a>
     </div>
 </div>
