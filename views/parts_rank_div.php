@@ -5,17 +5,22 @@ if (!isset($is_wide)) {
     $is_wide = FALSE;
 }
 $datehour = $ranks[0]->datehour;
-if ($is_wide) {
-    $rank_title = date(FORMAT_RANKS_TITLE_DATEHOUR, strtotime($datehour)) . 'のトレンド';
-} else {
-    $rank_title = '<span class="main">' . date("H時", strtotime($datehour)) . 'のトレンド</span><span class="min-date">' . date(FORMAT_RANKS_TITLE_DATE, strtotime($datehour)) . '</span>';
-}
+
 $page_link = SITE_ROOT . URL_LOG . datehourtonum($datehour);
 ?>
 
-<div class="card rankbox">
+<div class="card card-rankbox">
     <div class="card-content green-text">
-        <span class="card-title"><a href="<?= $page_link ?>"><?= $rank_title ?></a></span>
+        <span class="card-title">
+            <?php if ($is_wide) { ?>
+                <span class="main"><?= date("H時", strtotime($datehour)) ?>のトレンド</span>
+            <?php } else { ?>
+                <span class="min-date"><?= date(FORMAT_RANKS_TITLE_DATE, strtotime($datehour)) ?></span><br />
+                <a href="<?= $page_link ?>">
+                    <?= date("H時", strtotime($datehour)) ?>のトレンド
+                </a>
+            <?php } ?>
+        </span>
         <table class="hoverable rank-table">
             <tbody>
                 <?php foreach ($ranks as $i => $rank): ?>
@@ -29,6 +34,6 @@ $page_link = SITE_ROOT . URL_LOG . datehourtonum($datehour);
         </table>
     </div>
     <div class="card-action">
-        <a href="<?= $page_link ?>">もっと見る</a>
+        <a class="btn more-btn" href="<?= $page_link ?>">もっと見る</a>
     </div>
 </div>

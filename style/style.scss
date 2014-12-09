@@ -1,7 +1,6 @@
 // vim: foldmethod=syntax
 
 @import "../bower_components/materialize/sass/materialize";
-@import "./mixins";
 
 
 // variables
@@ -13,6 +12,22 @@ $col_font_link_light: $col_main - #444;
 $col_font_link_dark: $col_main - #111;
 
 $fontsize-m: 18px;
+
+// simple classes
+
+.card {
+    padding: 10px;
+    background: white;
+    margin: 10px;
+    box-shadow: 0 0 1px $col_main - #888;
+    border-radius: 2px;
+    border-top: solid 3px $col_main_dark;
+}
+
+.margin-center {
+    margin: 0 auto;
+}
+
 
 body {
     font-family: 'MS PGothic', Osaka, Arial, sans-serif;
@@ -33,7 +48,7 @@ body {
         width: 450px;
         background: white;
         border-radius: 50%;
-        @include margin-center();
+        @extend .margin-center;
         text-align: center;
         overflow: hidden;
         box-shadow: 0 0 75px -15px;
@@ -53,9 +68,30 @@ body {
     }
 }
 
-.rankbox {
+.card.card-rankbox {
+    .card-content {
+        span.card-title {
+            line-height: 23px;
+            a {
+                color: $col_font_link_dark;
+                &:visited {
+                    color: $col_font_link_light;
+                }
+            }
+        }
+    }
+    .card-action {
+        overflow: hidden;
+        padding: 5px;
+    }
+
+    .rank-table {
+        padding: 5px;
+    }
+
     .min-date {
         font-size: 0.7em;
+        color: green;
         &:before {
             content: '[';
         }
@@ -63,15 +99,15 @@ body {
             content: ']';
         }
     }
+
 }
 
-card {
-    @include card();
+.card {
+    @extend .card;
 }
 
 .rank-table {
     //width: 100%;
-    width: 330px;
     border-style: none; td {
         border-style: none;
         &:nth-of-type(1) {
@@ -84,7 +120,16 @@ card {
             width: 30%;
         }
     }
+    td {
+        padding: 5px;
+    }
 }
 
-// simple classes
+.btn.more-btn {
+    @extend .right;
+    @extend .orange;
+    @extend .waves-effect;
+    @extend .white-text;
+    margin: 0px;
+}
 
