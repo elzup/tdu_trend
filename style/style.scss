@@ -18,19 +18,9 @@ body {
     font-family: 'MS PGothic', Osaka, Arial, sans-serif;
 }
 
-a {
-    color: $col_font_link_dark;
-    text-decoration: none;
-    &:hover {
-        color: $col_font_link_light;
-    }
-    &:visited {
-        color: $col_font_link_light;
-    }
-}
-
 #content {
-    margin: 0 200px;
+    margin: 0 auto;
+    width: 1000px;
 }
 
 #eyecatch {
@@ -64,19 +54,13 @@ a {
 }
 
 .rankbox {
-    @include card();
-
-    h3 {
-        padding-top: 5px;
-        font-size: $fontsize-m;
-        .date {
-            font-size: 0.7em;
-            &:before {
-                content: '[';
-            }
-            &:after {
-                content: ']';
-            }
+    .min-date {
+        font-size: 0.7em;
+        &:before {
+            content: '[';
+        }
+        &:after {
+            content: ']';
         }
     }
 }
@@ -86,9 +70,9 @@ card {
 }
 
 .rank-table {
-    width: 100%;
-    border-style: none;
-    td {
+    //width: 100%;
+    width: 330px;
+    border-style: none; td {
         border-style: none;
         &:nth-of-type(1) {
             width: 10%;

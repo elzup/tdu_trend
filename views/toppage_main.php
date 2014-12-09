@@ -1,6 +1,7 @@
 <?php
 /* @var $new_trends stdclass[] */
 /* @var $ranks_list array */
+$cc = 0;
 ?>
 <div id="content" class="row">
     <div class="col m8">
@@ -12,9 +13,18 @@
                     $ranks = $chunks[0];
                     require('./views/parts_rank_div.php');
                     ?>
-                </div>
-            <?php } ?>
-        </div>
+                </div> 
+                <?php
+                if ($cc % 2 == 1) {
+                    ?>
+                </div> 
+                <div class="row">
+                    <?php
+                }
+                $cc++;
+            }
+            ?>
+        </div> 
     </div>
     <div class="col m4">
         <div class="card">

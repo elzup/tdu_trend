@@ -47,6 +47,10 @@ if (ENV == ENV_DEVELOP) {
 } else {
     define('SITE_ROOT', 'http://trend.elzup.com/');
 }
+define('URL_MATERIALIZE', SITE_ROOT . 'bower_components/materialize/');
+define('URL_MATERIALIZE_JS', URL_MATERIALIZE . 'bin/materialize.js');
+define('URL_JQUERY', SITE_ROOT . 'bower_components/jquery/dist/jquery.min.js');
+
 define('URL_LOG', 'log/');
 define('URL_REGIST', 'regist/');
 define('URL_REGIST_POST', URL_REGIST . 'post/');

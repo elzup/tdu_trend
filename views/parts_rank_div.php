@@ -13,10 +13,10 @@ if ($is_wide) {
 $page_link = SITE_ROOT . URL_LOG . datehourtonum($datehour);
 ?>
 
-<div class="card">
+<div class="card rankbox">
     <div class="card-content green-text">
         <span class="card-title"><a href="<?= $page_link ?>"><?= $rank_title ?></a></span>
-        <table class="pure-table pure-table-bordered rank-table">
+        <table class="hoverable rank-table">
             <tbody>
                 <?php foreach ($ranks as $i => $rank): ?>
                     <tr>
