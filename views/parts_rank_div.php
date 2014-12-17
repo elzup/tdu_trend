@@ -12,9 +12,7 @@ $page_link = SITE_ROOT . URL_LOG . datehourtonum($datehour);
 <div class="card card-rankbox">
     <div class="card-content green-text">
         <span class="card-title">
-            <?php if ($is_wide) { ?>
-                <span class="main"><?= date("H時", strtotime($datehour)) ?>のトレンド</span>
-            <?php } else { ?>
+            <?php if (!$is_wide) { ?>
                 <span class="min-date"><?= date(FORMAT_RANKS_TITLE_DATE, strtotime($datehour)) ?></span><br />
                 <a href="<?= $page_link ?>">
                     <?= date("H時", strtotime($datehour)) ?>のトレンド
@@ -33,7 +31,9 @@ $page_link = SITE_ROOT . URL_LOG . datehourtonum($datehour);
             </tbody>
         </table>
     </div>
-    <div class="card-action">
-        <a class="btn more-btn" href="<?= $page_link ?>">More<i class="mdi-av-equalizer right"></i></a>
-    </div>
+    <?php if (!$is_wide) { ?>
+        <div class="card-action">
+            <a class="btn more-btn" href="<?= $page_link ?>">More<i class="mdi-av-equalizer right"></i></a>
+        </div>
+    <?php } ?>
 </div>

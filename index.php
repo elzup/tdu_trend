@@ -43,7 +43,7 @@ $app->get('/job/h', '\JobController:tweet_hour');
 $app->get('/job/d', '\JobController:tweet_day');
 
 $app->get('/job/r/:word', function($word) {
-show(new JobController()).regist_word($word);
+    show(new JobController()).regist_word($word);
 });
 
 $app->get("/info", function() {

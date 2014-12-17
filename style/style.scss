@@ -16,6 +16,10 @@ $fontsize-m: 18px;
 
 // simple classes
 
+h1 {
+    font-size: 40px;
+}
+
 .card {
     padding: 10px;
     background: white;
@@ -168,3 +172,5 @@ nav {
     }
 }
 
+// other medias
+@import "./small";

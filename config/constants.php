@@ -44,6 +44,7 @@ define('MYSQL_TIMESTAMP_DATEHOUR', 'Y-m-d H:00:00');
 // url rootings
 if (ENV == ENV_DEVELOP) {
     define('SITE_ROOT', 'http://localhost/tdu_trend/');
+//    define('SITE_ROOT', 'http://' . $_SERVER['SERVER_ADDR'] . '/tdu_trend/');
 } else {
     define('SITE_ROOT', 'http://trend.elzup.com/');
 }
