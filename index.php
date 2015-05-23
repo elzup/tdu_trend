@@ -50,5 +50,4 @@ $app->get("/info", function() {
     phpinfo();
 })->name("info");
 
-
 $app->run();
