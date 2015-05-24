@@ -1,7 +1,5 @@
 gulp = require 'gulp'
 gutil = require 'gulp-util'
-stylus = require 'gulp-stylus'
-autoprefixer = require 'gulp-autoprefixer'
 
 $ = require('gulp-load-plugins')()
 
@@ -26,6 +24,10 @@ config =
   styles:
     source: './src/stylus'
     watch: './src/stylus/*.styl'
+    destination: './style/'
+  sass:
+    source: './src/sass'
+    watch: './src/sass/*.sass'
     destination: './style/'
 
 # error handle
@@ -53,23 +55,34 @@ gulp.task 'script', ->
     .on 'error', handleError
     .pipe gulp.dest config.scripts.destination
 
-gulp.task "style", ->
+gulp.task "stylus", ->
   gulp
     .src config.styles.watch
     .pipe $.sourcemaps.init()
-    .pipe stylus
+    .pipe $.stylus
       compress: true
-    .pipe autoprefixer
+    .pipe $.autoprefixer
       browsers: ['last 2 versions']
     .pipe $.sourcemaps.write('.')
     .on 'error', handleError
     .pipe gulp.dest config.styles.destination
 
+gulp.task "sass", ->
+  gulp
+  .src config.sass.watch
+  .pipe $.sourcemaps.init()
+  .pipe $.sass
+    compress: true
+  .pipe $.autoprefixer
+    browsers: ['last 2 versions']
+  .pipe $.sourcemaps.write('.')
+  .on 'error', handleError
+  .pipe gulp.dest config.sass.destination
 
 # watch
 gulp.task 'watch', ->
   gulp.watch config.scripts.watch, ['script']
-  gulp.watch config.styles.watch, ['style']
+  gulp.watch config.sass.watch, ['sass']
 
 #load
-gulp.task 'default', ["script", "style", "template"]
+gulp.task 'default', ["script", "sass", "template"]
