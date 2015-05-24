@@ -1,34 +1,30 @@
 <?php
 
-class TrendModel extends PDO {
+class TrendModel {
 
     public function __construct() {
-        $this->engine = DB_ENGINE;
-        $this->host = DB_HOST;
-        $this->database = DB_NAME;
-        $this->user = DB_USER;
-        $this->pass = DB_PASSWORD;
-        $dns = $this->engine . ':dbname=' . $this->database . ";host=" . $this->host;
-        parent::__construct($dns, $this->user, $this->pass);
     }
 
     // ----------------- DB Manage Wrap ----------------- //
 
-    public function regist_words(array $words) {
-        $sql = 'INSERT INTO ' . DB_TN_CACHES . ' (' . DB_CN_CACHES_WORD . ', ' . DB_CN_CACHES_TWITTER_ID . ', ' . DB_CN_CACHES_TIMESTAMP . ') VALUES ';
-        $sql_values = array();
-        for ($i = 0; $i < count($words); $i++) {
-            $sql_values[] = "(:WORD$i, :TID$i, :TS$i)";
-        }
-        $sql .= implode(',', $sql_values);
-        $stmt = $this->prepare($sql);
-        foreach ($words as $i => $word) {
-            $stmt->bindValue(":WORD$i", $word->word);
-            $stmt->bindValue(":TID$i", $word->twitter_id);
-            $stmt->bindValue(":TS$i", date(MYSQL_TIMESTAMP, $word->timestamp));
-        }
-        return $stmt->execute();
+    public function regist_word($word) {
+		$cache = ORM::for_table(DB_TN_CACHES);
+		$cache->set(array (
+			DB_CN_CACHES_WORD => $word->word,
+			DB_CN_CACHES_TWITTER_ID => $word->twitter_id,
+			DB_CN_CACHES_TIMESTAMP => date(MYSQL_TIMESTAMP, $word->timestamp),
+		));
+		$cache->save();
+        return $cache->id();
     }
+
+	public function regist_words(array $words) {
+		$ids = array();
+		foreach ($words as $word) {
+			$ids[] = $this->regist_word($word);
+		}
+		return $ids;
+	}
 
     public function regist_procede_word($word) {
         return $this->insert_procede_word($word);
@@ -39,10 +35,13 @@ class TrendModel extends PDO {
     }
 
     private function insert_special_word($word, $type) {
-        $stmt = $this->prepare('INSERT INTO ' . DB_TN_SPECIALS . ' (' . DB_CN_SPECIALS_WORD . ', ' . DB_CN_SPECIALS_TYPE . ') VALUES (:WORD, :TYPE)');
-        $stmt->bindValue(':WORD', $word);
-        $stmt->bindValue(':TYPE', $type);
-        return $stmt->execute();
+		$special = ORM::for_table(DB_TN_SPECIALS);
+		$special->set(array (
+			DB_CN_SPECIALS_WORD => $word,
+			DB_CN_SPECIALS_TYPE => $type,
+		));
+		$special->save();
+		return $special->id();
     }
 
     public function insert_logs($words) {
@@ -60,34 +59,44 @@ class TrendModel extends PDO {
     }
 
     private function insert_log($word, $point, $datehour) {
-        $stmt = $this->prepare('INSERT INTO ' . DB_TN_LOGS . ' (' . DB_CN_LOGS_WORD . ', ' . DB_CN_LOGS_POINT . ', ' . DB_CN_LOGS_DATEHOUR . ') VALUES (:WORD, :POINT, :DATEHOUR)');
-        $stmt->bindValue(':WORD', $word);
-        $stmt->bindValue(':POINT', $point);
-        $stmt->bindValue(':DATEHOUR', $datehour);
-        return $stmt->execute();
+		$log = ORM::for_table(DB_TN_LOGS)->create();
+		$log->set(array(
+			DB_CN_LOGS_WORD => $word,
+			DB_CN_LOGS_POINT => $point,
+			DB_CN_LOGS_DATEHOUR => $datehour,
+		));
+		$log->save();
+        return $log->id();
     }
 
     private function insert_memory($word, $count, $date) {
-        $stmt = $this->prepare('INSERT INTO ' . DB_TN_MEMORYS . ' (' . DB_CN_MEMORYS_WORD . ', ' . DB_CN_MEMORYS_COUNT . ', ' . DB_CN_MEMORYS_DATE . ') VALUES (:WORD, :COUNT, :DATE) ON DUPLICATE KEY UPDATE ' . DB_CN_MEMORYS_COUNT . ' = ' . DB_CN_MEMORYS_COUNT . ' + :COUNT');
-        $stmt->bindValue(':WORD', $word);
-        $stmt->bindValue(':COUNT', $count);
-        $stmt->bindValue(':DATE', $date);
-        return $stmt->execute();
+		$memory = ORM::for_table(DB_TN_MEMORYS);
+		$memory->set(array(
+			DB_CN_MEMORYS_WORD => $word,
+			DB_CN_MEMORYS_COUNT => $count,
+			DB_CN_MEMORYS_DATE => $date,
+		));
+		$memory->save();
+		return $memory->id();
     }
 
     public function load_logs_recent($num) {
         $recent = date(MYSQL_TIMESTAMP_DATEHOUR, time() - 60 * 60 * ($num - 1));
-        if (ENV == ENV_DEVELOP) {
+        if (ENV == ENVIRONMENT_DEV) {
+			// デバッグ時は多めに取る
             $recent = date(MYSQL_TIMESTAMP_DATEHOUR, time() - 60 * 60 * ($num - 1) - 24 * 60 * 50 * 4);
         }
-        $sql = 'SELECT * FROM ' . DB_TN_LOGS . ' WHERE `' . DB_CN_LOGS_DATEHOUR . '` >= \'' . $recent . '\' ORDER BY ' . DB_CN_LOGS_DATEHOUR . ' DESC , ' . DB_CN_LOGS_POINT .' DESC';
-//		echo $sql;
-        if (!$stmt = $this->query($sql)) {
-            return NULL;
-        }
+		$logs = ORM::for_table(DB_TN_LOGS)
+			->where_gte(DB_CN_LOGS_DATEHOUR, $recent)
+			->order_by_desc(DB_CN_LOGS_DATEHOUR)
+			->order_by_desc(DB_CN_LOGS_POINT)
+		->find_many();
+		if (count($logs) == 0) {
+			return NULL;
+		}
         $res = array();
-        $recs = $stmt->fetchAll(PDO::FETCH_CLASS);
-        foreach ($recs as $rec) {
+		// TODO: 動くか？, check dump
+        foreach ($logs as $rec) {
             if (!isset($res[$rec->datehour])) {
                 $res[$rec->datehour] = array();
             }
@@ -96,18 +105,16 @@ class TrendModel extends PDO {
             }
             $res[$rec->datehour][] = $rec;
         }
-        //     return array_values($res);
         return $res;
     }
 
     public function load_logs($time, $limit = NULL) {
-        $sql = 'SELECT * FROM ' . DB_TN_LOGS . ' WHERE ' . DB_CN_LOGS_DATEHOUR . ' = \'' . $time . '\' ORDER BY ' . DB_CN_LOGS_POINT . ' DESC';
-        if (isset($limit)) {
-            $sql .= ' LIMIT ' . $limit;
-        }
-//		echo $sql;
-        $stmt = $this->query($sql);
-        return !!$stmt ? $stmt->fetchAll(PDO::FETCH_CLASS) : NULL;
+//        $sql = 'SELECT * FROM ' . DB_TN_LOGS . ' WHERE ' . DB_CN_LOGS_DATEHOUR . ' = \'' . $time . '\' ORDER BY ' . DB_CN_LOGS_POINT . ' DESC';
+		$sql = ORM::for_table(DB_TN_LOGS)->where(DB_CN_LOGS_DATEHOUR, $time)->order_by_desc(DB_CN_LOGS_POINT);
+		if (isset($limit)) {
+			$sql->limit($limit);
+		}
+        return $sql->find_many();
     }
 
     public function load_caches() {
@@ -123,7 +130,15 @@ class TrendModel extends PDO {
 
     public function select_logs_date($date, $num = TREND_DAY_WORD_NUM) {
         $stmt = $this->query('SELECT ' . DB_CN_LOGS_WORD . ', sum(' . DB_CN_LOGS_POINT . ') as point_sum FROM `' . DB_TN_LOGS . '` WHERE ' . DB_CN_LOGS_DATEHOUR . ' between \'' . $date . ' 00:00:00\' and \'' . $date . ' 23:59:59\' group by ' . DB_CN_LOGS_WORD . ' ORDER BY sum(point) DESC LIMIT ' . $num);
-        return $stmt->fetchAll(PDO::FETCH_CLASS);
+		$logs = ORM::for_table(DB_TN_LOGS)
+			->select(DB_CN_LOGS_WORD, '')
+			->select('sum(' . DB_CN_LOGS_POINT . ')', 'point_sum')
+			->where_raw('(' . DB_CN_LOGS_DATEHOUR . ' BETWEEN ? AND ?)' , array("{$date} 00:00:00", "{$date} 23:59:59"))
+			->group_by(DB_CN_LOGS_WORD)
+			->order_by_desc('sum(point)')
+			->limit(($num))
+			->find_many();
+        return $logs;
     }
 
     public function delete_caches_all() {
@@ -131,20 +146,21 @@ class TrendModel extends PDO {
     }
 
     public function select_cache_top($limit = TOP_LIMIT) {
-        $stmt = $this->query('SELECT * FROM ' . DB_TN_CACHES . ' WHERE ' . DB_CN_CACHES_WORD . ' in ( select ' . DB_CN_CACHES_WORD . ' from( select ' . DB_CN_CACHES_WORD . ' from `tt_caches` group by ' . DB_CN_CACHES_WORD . ' order by count(' . DB_CN_CACHES_WORD . ') DESC limit ' . $limit . ' ) as t)');
-        return $stmt->fetchAll(PDO::FETCH_CLASS);
+        $stmt = $this->query('SELECT * FROM ' . DB_TN_CACHES . ' WHERE ' . DB_CN_CACHES_WORD . ' in ( )');
+		$caches = ORM::for_table(DB_TN_CACHES)
+			->where(DB_CN_CACHES_WORD)
+			->raw_query('in (select ' . DB_CN_CACHES_WORD . ' from( select ' . DB_CN_CACHES_WORD . ' from `tt_caches` group by ' . DB_CN_CACHES_WORD . ' order by count(' . DB_CN_CACHES_WORD . ') DESC limit ? ) as t)', array($limit))
+			->find_many();
+        return $caches;
     }
 
     public function select_cache_all() {
-        $stmt = $this->query('SELECT * FROM ' . DB_TN_CACHES);
-        return $stmt->fetchAll();
+        return ORM::for_table(DB_TN_CACHES)->find_many();
     }
 
     public function get_special_words() {
-        $sql = 'SELECT * FROM ' . DB_TN_SPECIALS;
-        $stmt = $this->prepare($sql);
-        $stmt->execute();
-        return $this->stmt_to_row($stmt);
+		return ORM::for_table(DB_TN_SPECIALS)->find_many();
+//        return $this->stmt_to_row($stmt);
     }
 
     public function check_trendy($words) {
@@ -194,20 +210,12 @@ class TrendModel extends PDO {
 
     public function count_memory($word) {
         $date_after7 = date(MYSQL_TIMESTAMP_DATE, strtotime('-7day'));
-        $stmt = $this->prepare('SELECT sum(`' . DB_CN_MEMORYS_COUNT . '`) as "sum" FROM ' . DB_TN_MEMORYS . ' WHERE ' . DB_CN_MEMORYS_WORD . ' = :WORD AND ' . DB_CN_MEMORYS_DATE . '> ' . $date_after7);
-        $stmt->bindValue(':WORD', $word);
-        $stmt->execute();
-        $fetch = $stmt->fetchAll(PDO::FETCH_CLASS);
-        $res = $fetch[0];
-        return $res->sum;
-    }
+		$res = ORM::for_table(DB_TN_MEMORYS)
+			->select('SELECT sum(`' . DB_CN_MEMORYS_COUNT . '`)', 'sum')
+			->where(DB_CN_MEMORYS_WORD, $word)
+			->where_gt(DB_CN_MEMORYS_DATE, $date_after7)
+			->find_one();
 
-    private function stmt_to_row($stmt) {
-        $rows = array();
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $rows[] = $row;
-        }
-        return $rows;
+        return $res;
     }
-
 }

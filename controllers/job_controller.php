@@ -25,7 +25,7 @@ class JobController {
 	}
 
     private function checkAuth() {
-        if (ENV != ENV_DEVELOP && @$_GET['key'] != SECRET_KEY) {
+        if (ENV != ENVIRONMENT_DEV && @$_GET['key'] != SECRET_KEY) {
                 die('invalid access');
         }
     }

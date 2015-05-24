@@ -1,11 +1,15 @@
 {
+    "name": "elzzup/tdu_trend",
+    "authors": [
+        {
+            "name": "elzzup",
+            "email": "guild0105@gmail.com"
+        }
+    ],
     "require": {
         "slim/slim": "2.*",
-        "abraham/twitteroauth": "dev-master"
-    },
-    "autoload": {
-        "classmap": [
-            "vendor/abraham/twitteroauth/twitteroauth/"
-        ]
+        "abraham/twitteroauth": "dev-master",
+        "j4mie/idiorm": "1.*",
+        "j4mie/paris": "1.*"
     }
 }

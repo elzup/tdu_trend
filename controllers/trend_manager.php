@@ -256,6 +256,7 @@ class TrendManager {
 			$tw = new Tweet($tweet);
 			$lastId = max($lastId, $tw->id);
 			if (!$this->twitter->isListFollow($tw->user_screen_name)) {
+				// フォロバする
 				$this->twitter->followList($tw->user_screen_name);
 				$this->twitter->tweetFollowed($tw);
 			} elseif (!$this->replayFillter($tw)) {
@@ -283,20 +284,20 @@ class TrendManager {
 	}
 
 	private function manageReplayGoogle(Tweet $tw) {
-		$word = preg_replace("/(^\s|\s.*$)/", "", shaveScreenNames($tw->text));
+		$word = preg_replace("/(^ | .*$)/", "", shaveScreenNames($tw->text));
 		$datas = getGoogleSuggest($word);
 		if (empty($datas)) {
 			$text = "( 'ω')";
-			$hand = preg_split("/\s/", "... /// ??? ｴｯ ん？ ()");
+			$hand = preg_split("/ /", "... /// ??? ｴｯ ん？ ()");
 			$handr = $hand[rand(0, count($hand) - 1)];
 			$text .= $handr;
 		} else {
 			$tmp_text = $datas[rand(0, count($datas) - 1)];
 			if (strpos($tmp_text, " ") !== false) {
-				$hand = preg_split("/\s/", "は が で に を な");
+				$hand = preg_split("/ /", "は が で に を な");
 				$handr = $hand[rand(0, count($hand) - 1)];
 				echo $tmp_text . ":" . $handr;
-				$text = preg_replace("/\s/", $handr, $tmp_text);
+				$text = preg_replace("/ /", $handr, $tmp_text);
 				$text .= (rand(0, 4) == 0 ? "？" : "");
 			}
 			$text = $this->decoratePanel($text);
@@ -314,7 +315,7 @@ class TrendManager {
 		$words = explode(',', $matches[2]);
 		$text = "";
 		foreach ($words as $w) {
-			$w = preg_replace("(^\s+|\s+$)", "", $w);
+			$w = preg_replace("(^ +| +$)", "", $w);
 			$l = strlen($w);
 			if (strpos($w, "@")) {
 				$text .= $this->decoratePanel("@入りはだめ") . "({$w})\n";
