@@ -1,0 +1,149 @@
+// vim: foldmethod=syntax
+
+// @import "../bower_components/materialize/sass/materialize"
+
+// variables
+col_main = #6fff0f
+col_main_dark = green
+col_font_light = white
+col_font_link_light = col_main - #444
+col_font_link_dark = col_main - #111
+height_nav = 64px
+fontsize-m = 18px
+
+// simple classes
+
+h1
+  font-size 40px
+
+
+.card
+  padding 10px
+  background white
+  margin 10px
+  box-shadow 0 0 1px col_main - #888
+  border-radius 2px
+  border-top solid 3px col_main_dark
+
+
+.margin-center
+  margin 0 auto
+
+
+
+body
+  font-family 'MS PGothic', Osaka, Arial, sans-serif
+
+
+#content
+  margin 0 auto
+  width 1000px
+
+
+#eyecatch
+//  @extend .light-green
+//  @extend .accent-1
+  padding 30px 0 0
+  height 500px
+  background url(../images/bg_top.png) 0 0
+
+  #topcircle
+    height 450px
+    width 450px
+    background white
+    border-radius 50%
+//    @extend .margin-center
+    text-align center
+    overflow hidden
+    box-shadow 0 0 75px -15px
+    border solid white 5px
+
+    h1
+      background col_main
+      height 10%
+      line-height 100%
+      font-size 30px
+      margin 0 0 10px
+      padding 40px
+      text-shadow 1px 1px 5px col_font_light
+      color col_font_light
+
+
+
+.card.card-rankbox
+  .card-content
+    padding 8px
+    span.card-title
+      line-height 23px
+      a
+        color col_font_link_dark
+        &:visited
+          color col_font_link_light
+  .card-action
+    overflow hidden
+    padding 5px
+  .rank-table
+    padding 5px
+  .min-date
+    font-size 0.7rem
+    color green
+    &:before
+      content '['
+    &:after
+      content ']'
+
+//.card
+//  @extend .card
+
+
+nav
+//  @extend .light-green
+//  @extend .accent-1
+  height height_nav
+  box-shadow none
+  .nav-wrapper.nav-top
+
+    .side-nav
+      li
+//        @extend .light-green
+//        @extend .accent-3
+//        &hover
+//          @extend .accent-4
+        text-align center
+        width height_nav * 2
+        border-radius height_nav height_nav 0 0
+        m = 20px
+        margin-left m
+        margin-right m
+        overflow hidden
+        a
+          font-size 1.3rem
+
+
+//width: 100%;
+.rank-table
+  border-style none
+  td
+    border-style none
+    &:nth-of-type(1)
+      width 10%
+
+    &:nth-of-type(2)
+      width 60%
+
+    &:nth-of-type(3)
+      width 30%
+  td
+    padding 5px
+
+.btn.more-btn
+//  @extend .right
+//  @extend .orange
+//  @extend .waves-effect
+//  @extend .white-text
+  margin 0px
+  i
+    margin-left 5px
+
+// other medias
+@import "./sub/small"
