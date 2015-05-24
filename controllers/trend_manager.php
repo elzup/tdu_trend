@@ -1,6 +1,7 @@
 <?php
 
-class TrendManager {
+class TrendManager
+{
 
 	protected $list_name;
 	protected $list_tweet;
@@ -65,13 +66,13 @@ class TrendManager {
 	}
 
 	public function manageTrendHour() {
-        echo '<pre>';
+		echo '<pre>';
 		$words = $this->trendDAO->load_caches();
 		// 出現回数を記録
 		$this->trendDAO->insert_memorys($this->sortByCount($words));
 		$trend_words_all = $this->collectTrends($words);
 
-        $this->trendDAO->insert_logs($trend_words_all);
+		$this->trendDAO->insert_logs($trend_words_all);
 
 		$tmp = array_chunk($trend_words_all, TREND_HOUR_WORD_NUM, TRUE);
 		$trend_words = $tmp[0];
@@ -94,13 +95,13 @@ class TrendManager {
 
 	private function manageListTL() {
 		if (empty($this->list_tweet)) {
-//			echo "Non newTweet" . PHP_EOL;
+			//			echo "Non newTweet" . PHP_EOL;
 			return;
 		}
 		$lastId = $this->mem->since_list;
 		foreach ($this->list_tweet as $tweet) {
 			$tw = new Tweet($tweet);
-//			echo $tw;
+			//			echo $tw;
 			$lastId = max($lastId, $tw->id);
 			if ($this->isFillterTweet($tw)) {
 				continue;
@@ -151,7 +152,7 @@ class TrendManager {
 
 	private function collectText(Tweet $tw) {
 		$text = $this->shaveText($tw->text);
-//		$this->checkMood($text);
+		//		$this->checkMood($text);
 		$tags = popHashTags($text);
 		if (!empty($tags)) {
 			foreach ($tags as $t) {
@@ -216,7 +217,7 @@ class TrendManager {
 		$len = strlen($word);
 		$mb_len = mb_strlen($word);
 		// 単語の長さが短い場合
-		if (($len == $mb_len && $len <= 3 ) || $mb_len == 1 || preg_match("/^[ぁ-んー]{0,3}$/u", $word) || preg_match('/^[一-龠][ぁ-んー]?$/u', $word)) {
+		if (($len == $mb_len && $len <= 3) || $mb_len == 1 || preg_match("/^[ぁ-んー]{0,3}$/u", $word) || preg_match('/^[一-龠][ぁ-んー]?$/u', $word)) {
 			return false;
 		}
 		// ngな単語を含んでいる場合
@@ -340,7 +341,7 @@ class TrendManager {
 			return false;
 		}
 		$text = "";
-		$text .="　v\n[ 'ω']っ\n";
+		$text .= "　v\n[ 'ω']っ\n";
 		$keyword = $matches[3];
 		$resultn = get_nico_smurls($keyword, "n");
 		$resultm = get_nico_smurls($keyword, "m");
@@ -351,7 +352,7 @@ class TrendManager {
 		$rb = rand(0, 5);
 		if ($resultn[$ra]['url'] != $resultm[$rb]['url']) {
 			$text2 = $resultm[$rb]['url'] . " " . mb_substr($resultm[$rb]['name'], 0, 15) . "…";
-			$text .=$text2;
+			$text .= $text2;
 		}
 		echo $mtext = "@{$tw->user_screen_name}\n" . $text;
 		if (!ma_debug_tweet) {
@@ -385,7 +386,7 @@ class TrendManager {
 			if (!isset($arr[$word->word])) {
 				$arr[$word->word] = 0;
 			}
-			$arr[$word->word] ++;
+			$arr[$word->word]++;
 		}
 		return $arr;
 	}
@@ -394,9 +395,9 @@ class TrendManager {
 		$counts = array();
 		$persons = array();
 		foreach ($words as $word) {
-            if (!trimWord($word->word)) {
-                continue;
-            }
+			if (!trimWord($word->word)) {
+				continue;
+			}
 			if (!isset($counts[$word->word])) {
 				$counts[$word->word] = 0;
 				$persons[$word->word] = array();
@@ -411,12 +412,12 @@ class TrendManager {
 			$count = $this->reflectMemory($word, $count);
 		}
 		arsort($counts);
-        return $counts;
+		return $counts;
 	}
 
 	private function reflectMemory($word, $count) {
-        $num = $this->trendDAO->count_memory($word);
-        return max($count - sqrt($num), 1);
+		$num = $this->trendDAO->count_memory($word);
+		return max($count - sqrt($num), 1);
 	}
 
 	private function reflectPersion($count, $person_num) {
