@@ -20,8 +20,12 @@ plan/
 
 env*
 
+# lib
 bower_components/
-
 vendor/
+node_modules/
+
+# secret keys
 config/keys.php
 composer.lock
+
